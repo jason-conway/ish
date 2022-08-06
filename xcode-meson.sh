@@ -3,6 +3,8 @@
 # Try to figure out the user's PATH to pick up their installed utilities.
 export PATH="$PATH:$(sudo -u "$USER" -i echo '$PATH')"
 
+
+
 mkdir -p "$MESON_BUILD_DIR"
 cd "$MESON_BUILD_DIR"
 

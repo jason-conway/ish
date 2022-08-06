@@ -2247,18 +2247,27 @@
 		497F6CE8254E5E4C00C82F46 /* Debug-ApplePleaseFixFB19282108 */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = "Debug-ApplePleaseFixFB19282108";
 		};
 		497F6CE9254E5E4C00C82F46 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
 		497F6D4C254E605F00C82F46 /* Debug-ApplePleaseFixFB19282108 */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				ENABLE_HARDENED_RUNTIME = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2270,6 +2279,7 @@
 		497F6D4D254E605F00C82F46 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				ENABLE_HARDENED_RUNTIME = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2349,6 +2359,7 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/UITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2368,6 +2379,7 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/UITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2413,6 +2425,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BB0B86CD2586FD8800208600 /* App.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 			};
 			name = "Debug-ApplePleaseFixFB19282108";
 		};
@@ -2420,6 +2433,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BB0B86CD2586FD8800208600 /* App.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 			};
 			name = Release;
 		};
@@ -2435,6 +2449,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BB0B86CD2586FD8800208600 /* App.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 			};
 			name = DebugLinux;
 		};
@@ -2442,6 +2457,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BB0B86CD2586FD8800208600 /* App.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 			};
 			name = DebugLinux;
 		};
@@ -2457,6 +2473,7 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = app/FileProvider/iSHFileProvider.entitlements;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/FileProvider/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER).FileProvider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2469,6 +2486,7 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/UITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2518,12 +2536,17 @@
 		BB7F62102688EAB5003C0220 /* DebugLinux */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = DebugLinux;
 		};
 		BB7F62112688EAB5003C0220 /* DebugLinux */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				ENABLE_HARDENED_RUNTIME = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2537,6 +2560,7 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = app/FileProvider/iSHFileProvider.entitlements;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/FileProvider/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER).FileProvider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2549,6 +2573,7 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = app/FileProvider/iSHFileProvider.entitlements;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/FileProvider/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER).FileProvider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2630,6 +2655,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BB0B86CD2586FD8800208600 /* App.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 			};
 			name = "Debug-ApplePleaseFixFB19282108";
 		};
@@ -2637,6 +2663,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BB0B86CD2586FD8800208600 /* App.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 			};
 			name = Release;
 		};
@@ -2652,6 +2679,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BB0B86CD2586FD8800208600 /* App.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 			};
 			name = ReleaseLinux;
 		};
@@ -2659,6 +2687,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BB0B86CD2586FD8800208600 /* App.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 			};
 			name = ReleaseLinux;
 		};
@@ -2674,6 +2703,7 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = app/FileProvider/iSHFileProvider.entitlements;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/FileProvider/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER).FileProvider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2686,6 +2716,7 @@
 			baseConfigurationReference = BB0B86D52587009D00208600 /* iOS.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				INFOPLIST_FILE = app/UITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2734,12 +2765,17 @@
 		BBEF19B626806D1F001225BD /* ReleaseLinux */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = ReleaseLinux;
 		};
 		BBEF19B726806D1F001225BD /* ReleaseLinux */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 5TU6J7NW98;
 				ENABLE_HARDENED_RUNTIME = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)";
 				PRODUCT_NAME = "$(TARGET_NAME)";

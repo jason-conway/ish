@@ -21,15 +21,21 @@ if get_option('kernel') == 'ish'
     endif
 endif
 
+hb_opt = 0
 libarchive = dependency('libarchive', required: false)
 if not libarchive.found()
     # homebrew
     libarchive_lib = cc.find_library('libarchive', dirs: ['/usr/local/opt/libarchive/lib'], required: false)
     if not libarchive_lib.found()
         libarchive_lib = cc.find_library('libarchive', dirs: ['/opt/homebrew/opt/libarchive/lib'], required: false)
+        hb_opt = 1
     endif
     if libarchive_lib.found()
-        libarchive = declare_dependency(dependencies: [libarchive_lib], include_directories: include_directories(['/usr/local/opt/libarchive/include']))
+        if hb_opt == 1
+            libarchive = declare_dependency(dependencies: [libarchive_lib], include_directories: include_directories(['/opt/homebrew/opt/libarchive/include']))
+        else
+            libarchive = declare_dependency(dependencies: [libarchive_lib], include_directories: include_directories(['/usr/local/opt/libarchive/include']))
+        endif
     endif
 endif
 

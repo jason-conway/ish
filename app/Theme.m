@@ -199,19 +199,58 @@ NSString *const ThemeUpdatedNotification = @"ThemeUpdatedNotification";
     if (!defaultThemes) {
         defaultThemes = @[
             [[self alloc] initWithName:@"Default"
-                          lightPalette:[[Palette alloc] initWithForegroundColor:@"#000"
+                          lightPalette:[[Palette alloc] initWithForegroundColor:@"#FD9F20"
                                                                 backgroundColor:@"#fff"
                                                                     cursorColor:nil
                                                           colorPaletteOverrides:nil]
-                           darkPalette:[[Palette alloc] initWithForegroundColor:@"#fff"
+                           darkPalette:[[Palette alloc] initWithForegroundColor:@"#FD9F20"
                                                                 backgroundColor:@"#000"
                                                                     cursorColor:nil
                                                           colorPaletteOverrides:nil]],
-            [[self alloc] initWithName:@"1337"
-                               palette:[[Palette alloc] initWithForegroundColor:@"#0f0"
-                                                                backgroundColor:@"#000"
-                                                                    cursorColor:nil
-                                                          colorPaletteOverrides:nil]],
+            [[self alloc] initWithName:@"Pastel"
+                          lightPalette:[[Palette alloc] initWithForegroundColor:@"#f7f6ec"
+                                                                backgroundColor:@"#1e1e1e"
+                                                                    cursorColor:@"#edcf4f"
+                                                          colorPaletteOverrides:@[
+                            @"#343935",
+                            @"#cf3f61",
+                            @"#7bb75b",
+                            @"#e9b32a",
+                            @"#4c9ad4",
+                            @"#a57fc4",
+                            @"#389aad",
+                            @"#fafaf6",
+                            @"#595b59",
+                            @"#d18fa6",
+                            @"#767f2c",
+                            @"#78592f",
+                            @"#135979",
+                            @"#604291",
+                            @"#76bbca",
+                            @"#b2b5ae",
+                          ]]
+                           darkPalette:[[Palette alloc] initWithForegroundColor:@"#f7f6ec"
+                                                                backgroundColor:@"#1e1e1e"
+                                                                    cursorColor:@"#edcf4f"
+                                                          colorPaletteOverrides:@[
+                            @"#343935",
+                            @"#cf3f61",
+                            @"#7bb75b",
+                            @"#e9b32a",
+                            @"#4c9ad4",
+                            @"#a57fc4",
+                            @"#389aad",
+                            @"#fafaf6",
+                            @"#595b59",
+                            @"#d18fa6",
+                            @"#767f2c",
+                            @"#78592f",
+                            @"#135979",
+                            @"#604291",
+                            @"#76bbca",
+                            @"#b2b5ae",
+                           ]]
+            ],
             [[self alloc] initWithName:@"Solarized"
                           lightPalette:[[Palette alloc] initWithForegroundColor:@"#657b83"
                                                                 backgroundColor:@"#fdf6e3"
