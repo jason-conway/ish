@@ -395,6 +395,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0F412108289F3B6400D40AD5 /* atomic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = atomic.h; sourceTree = "<group>"; };
+		0F412109289F3B6400D40AD5 /* spinlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spinlock.h; sourceTree = "<group>"; };
 		408A2639236440F8008A4E81 /* iOSFS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iOSFS.m; sourceTree = "<group>"; };
 		408A263B23644102008A4E81 /* iOSFS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iOSFS.h; sourceTree = "<group>"; };
 		491B31E42883BF22008EEFB0 /* ThemeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThemeViewController.h; sourceTree = "<group>"; };
@@ -1059,6 +1061,8 @@
 		BB7D93362087C2880008DA78 /* util */ = {
 			isa = PBXGroup;
 			children = (
+				0F412108289F3B6400D40AD5 /* atomic.h */,
+				0F412109289F3B6400D40AD5 /* spinlock.h */,
 				497F6CD3254E5CC800C82F46 /* bits.h */,
 				497F6CCF254E5CC800C82F46 /* fifo.c */,
 				497F6CCB254E5CC800C82F46 /* fifo.h */,
