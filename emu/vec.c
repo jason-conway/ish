@@ -173,6 +173,13 @@ void vec_add_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
     for (unsigned i = 0; i < array_size(src->u16); i++)
         dst->u16[i] += src->u16[i];
 }
+void vec_add_w64(NO_CPU, union mm_reg *src, union mm_reg *dst) {
+    union _mm s = { .qw = src->qw };
+    union _mm d = { .qw = dst->qw };
+    for (unsigned i = 0; i < 4; i++)
+        d.u16[i] += s.u16[i];
+    dst->qw = d.qw;
+}
 void vec_add_d128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
     for (unsigned i = 0; i < array_size(src->u32); i++)
         dst->u32[i] += src->u32[i];
@@ -191,6 +198,13 @@ void vec_sub_q128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
 void vec_sub_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
     for (unsigned i = 0; i < array_size(src->u16); i++)
         dst->u16[i] += src->u16[i];
+}
+void vec_sub_w64(NO_CPU, union mm_reg *src, union mm_reg *dst) {
+    union _mm s = { .qw = src->qw };
+    union _mm d = { .qw = dst->qw };
+    for (unsigned i = 0; i < 4; i++)
+        d.u16[i] -= s.u16[i];
+    dst->qw = d.qw;
 }
 
 void vec_madd_d64(NO_CPU, union mm_reg *src, union mm_reg *dst) {

@@ -346,7 +346,7 @@ restart:
 
                 case 0x74: TRACEI("pcmpeqb xmm:modrm, xmm");
                            READMODRM; V_OP(compare_eqb, xmm_modrm_val, xmm_modrm_reg,128); break;
-                case 0x75: TRACEI("pcmpeqb xmm:modrm, xmm");
+                case 0x75: TRACEI("pcmpeqw xmm:modrm, xmm");
                            READMODRM; V_OP(compare_eqw, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0x76: TRACEI("pcmpeqd xmm:modrm, xmm");
                            READMODRM; V_OP(compare_eqd, xmm_modrm_val, xmm_modrm_reg,128); break;
@@ -441,7 +441,7 @@ restart:
 
                 case 0x68: TRACEI("punpckhbw mm:modrm, mm");
                            READMODRM; V_OP(unpackh_bw, mm_modrm_val, mm_modrm_reg,64); break;
-                case 0x69: TRACEI("punpckhbw mm:modrm, mm");
+                case 0x69: TRACEI("punpckhwd mm:modrm, mm");
                            READMODRM; V_OP(unpackh_w, mm_modrm_val, mm_modrm_reg,64); break;
                 case 0x6b: TRACEI("packssdw mm:modrm, mm");
                            READMODRM; V_OP(packss_d, mm_modrm_val, mm_modrm_reg,64); break;
@@ -451,7 +451,7 @@ restart:
                            READMODRM; VMOV(mm_modrm_val, mm_modrm_reg,64); break;
                 case 0x71: READMODRM_NOMEM;
                            switch (modrm.opcode) {
-                               case 6: TRACEI("psllw imm, xmm");
+                               case 6: TRACEI("psllw imm, mm");
                                        READIMM8; V_OP(imm_shiftl_w, imm, mm_modrm_reg, 64); break;
                                 default: UNDEFINED;
                             }
@@ -492,6 +492,10 @@ restart:
                            READMODRM; V_OP(mulu_dq, mm_modrm_val, mm_modrm_reg,64); break;
                 case 0xf5: TRACEI("pmaddwd mm:modrm, mm");
                            READMODRM; V_OP(madd_d, mm_modrm_val, mm_modrm_reg,64); break;
+                case 0xf9: TRACEI("psubw mm:modrm, mm");
+                           READMODRM; V_OP(sub_w, mm_modrm_val, mm_modrm_val,64); break;
+                case 0xfd: TRACEI("paddw mm:modrm, mm");
+                           READMODRM; V_OP(add_w, mm_modrm_reg, mm_modrm_reg,64); break;
 #endif
 
                 default: TRACEI("undefined");
