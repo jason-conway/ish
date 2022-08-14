@@ -143,6 +143,25 @@ void vec_imm_shiftl_w128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
     }
 }
 
+void vec_imm_shiftrs_d128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
+    if (amount > 31) {
+        zero_xmm(dst);
+    } else {
+        for (int i = 0; i < 4; i++) {
+            dst->u32[i] = ((int32_t)(dst->u32[i])) >> amount; // UD
+        }
+    }
+}
+void vec_imm_shiftrs_w128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
+    if (amount > 15) {
+        zero_xmm(dst);
+    } else {
+        for (int i = 0; i < 8; i++) {
+            dst->u16[i] = ((int16_t)(dst->u16[i])) >> amount; // UD
+        }
+    }
+}
+
 void vec_shiftl_q128(NO_CPU, union xmm_reg *amount, union xmm_reg *dst) {
     uint64_t amount_qw = amount->qw[0];
 
@@ -519,6 +538,12 @@ void vec_mulu128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
         dst->u16[i] = ((res >> 16) & 0xffff);
     }
 }
+void vec_muluu128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
+    for (int i = 0; i < 8; i++) {
+        uint32_t res = dst->u16[i] * src->u16[i];
+        dst->u16[i] = ((res >> 16) & 0xffff);
+    }
+}
 
 void vec_mull64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
     union _mm s = { .qw = src->qw };
@@ -534,6 +559,16 @@ void vec_mulu64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
     union _mm d = { .qw = dst->qw };
     for (int i = 0; i < 4; i++) {
         uint32_t res = ((int16_t)d.u16[i] * (int16_t)s.u16[i]);
+        d.u16[i] = ((res >> 16) & 0xffff);
+    }
+    dst->qw = d.qw;
+}
+
+void vec_muluu64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
+    union _mm s = { .qw = src->qw };
+    union _mm d = { .qw = dst->qw };
+    for (int i = 0; i < 4; i++) {
+        uint32_t res = d.u16[i] * s.u16[i];
         d.u16[i] = ((res >> 16) & 0xffff);
     }
     dst->qw = d.qw;
