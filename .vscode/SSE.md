@@ -5,3 +5,4 @@
 | punpcklwd   | 66 0F 61 /r PUNPCKLWD xmm1, xmm2/m128 | https://www.felixcloutier.com/x86/punpcklbw:punpcklwd:punpckldq:punpcklqdq |
 | punpckhwd   | 66 0F 69 /r PUNPCKHWD xmm1, xmm2/m128 | https://www.felixcloutier.com/x86/punpckhbw:punpckhwd:punpckhdq:punpckhqdq |
 | pmaddwd     | 66 0F F5 /r PMADDWD xmm1, xmm2/m128   | https://www.felixcloutier.com/x86/pmaddwd                                  |
+| packssdw    | 66 0F 6B /r PACKSSDW xmm1, xmm2/m128  | https://www.felixcloutier.com/x86/packsswb:packssdw                        |

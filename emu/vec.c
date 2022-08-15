@@ -9,6 +9,17 @@ static inline void zero_xmm(union xmm_reg *xmm) {
     xmm->qw[1] = 0;
 }
 
+static inline uint32_t satd(uint32_t v) {
+    uint32_t sat = v >> 0;
+    if (sat > 0xffff8000)
+        sat &= 0xffff;
+    else if (sat > 0x7fffffff)
+        sat = 0x8000;
+    else if (sat > 0x7fff)
+        sat = 0x7fff;
+    return sat;
+}
+
 #define VEC_ZERO_COPY(zero, copy) \
     void vec_zero##zero##_copy##copy(NO_CPU, const void *src, void *dst) { \
         memcpy(dst, src, copy/8); \
@@ -343,6 +354,14 @@ void vec_unpackh_w128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
         dst->u16[2 * i + 1] = src->u16[i + 4];
     }
 }
+
+void vec_packss_d128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
+    dst->u32[0] = satd(dst->u32[0]) | (satd(dst->u32[1]) << 16);
+    dst->u32[1] = satd(dst->u32[2]) | (satd(dst->u32[3]) << 16);
+    dst->u32[2] = satd(src->u32[0]) | (satd(src->u32[1]) << 16);
+    dst->u32[3] = satd(src->u32[2]) | (satd(src->u32[3]) << 16);
+}
+
 void vec_shuffle_lw128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst, uint8_t encoding) {
     union xmm_reg src_copy = *src;
     for (int i = 0; i < 4; i++)
