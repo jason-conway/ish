@@ -341,6 +341,8 @@ restart:
 
                 case 0x74: TRACEI("pcmpeqb xmm:modrm, xmm");
                            READMODRM; V_OP(compare_eqb, xmm_modrm_val, xmm_modrm_reg,128); break;
+                case 0x75: TRACEI("pcmpeqw xmm:modrm, xmm");
+                           READMODRM; V_OP(compare_eqw, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0x76: TRACEI("pcmpeqd xmm:modrm, xmm");
                            READMODRM; V_OP(compare_eqd, xmm_modrm_val, xmm_modrm_reg,128); break;
 
