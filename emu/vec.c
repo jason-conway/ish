@@ -326,7 +326,12 @@ void vec_unpackh_bw128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
         dst->u8[2 * i + 1] = src->u8[i + 8];
     }
 }
-
+void vec_unpackh_w128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
+    for (int i = 0; i < 4; i++) {
+        dst->u16[2 * i + 0] = dst->u16[i + 4];
+        dst->u16[2 * i + 1] = src->u16[i + 4];
+    }
+}
 void vec_shuffle_lw128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst, uint8_t encoding) {
     union xmm_reg src_copy = *src;
     for (int i = 0; i < 4; i++)
