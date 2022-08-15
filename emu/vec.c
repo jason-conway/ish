@@ -160,6 +160,10 @@ void vec_add_q128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
 void vec_add_q64(NO_CPU, union mm_reg *src, union mm_reg *dst) {
     dst->qw += src->qw;
 }
+void vec_sub_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
+    for (unsigned i = 0; i < array_size(src->u16); i++)
+        dst->u16[i] -= src->u16[i];
+}
 void vec_sub_q128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
     dst->qw[0] -= src->qw[0];
     dst->qw[1] -= src->qw[1];

@@ -2467,7 +2467,7 @@ void test_sse(void)
     SSE_OP2(pmaddwd);
     // MMX_OP2(psadbw);
     // MMX_OP2(psubb);
-    // MMX_OP2(psubw);
+    SSE_OP2(psubw);
     // MMX_OP2(psubd);
     SSE_OP2(psubq);
     SSE_OP2(paddb);
