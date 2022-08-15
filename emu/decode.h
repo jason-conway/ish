@@ -381,6 +381,8 @@ restart:
                            READMODRM; V_OP(shiftl_q, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0xf4: TRACEI("pmuludq xmm:modrm, xmm");
                            READMODRM; V_OP(mulu_dq, xmm_modrm_val, xmm_modrm_reg,128); break;
+                case 0xf5: TRACEI("pmaddwd xmm:modrm, xmm");
+                           READMODRM; V_OP(madd_d, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0xfb: TRACEI("psubq xmm:modrm, xmm");
                            READMODRM; V_OP(sub_q, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0xfc: TRACEI("paddb xmm:modrm, xmm");

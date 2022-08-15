@@ -141,6 +141,17 @@ void vec_sub_q128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
     dst->qw[1] -= src->qw[1];
 }
 
+void vec_madd_d128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
+    dst->u32[0] = (int32_t)((int16_t)dst->u16[0] * (int16_t)src->u16[0]) +
+                  (int32_t)((int16_t)dst->u16[1] * (int16_t)src->u16[1]);
+    dst->u32[1] = (int32_t)((int16_t)dst->u16[2] * (int16_t)src->u16[2]) +
+                  (int32_t)((int16_t)dst->u16[3] * (int16_t)src->u16[3]);
+    dst->u32[2] = (int32_t)((int16_t)dst->u16[4] * (int16_t)src->u16[4]) +
+                  (int32_t)((int16_t)dst->u16[5] * (int16_t)src->u16[5]);
+    dst->u32[3] = (int32_t)((int16_t)dst->u16[6] * (int16_t)src->u16[6]) +
+                  (int32_t)((int16_t)dst->u16[7] * (int16_t)src->u16[7]);
+}
+
 void vec_mulu_dq128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
     dst->qw[0] = (uint64_t) src->u32[0] * dst->u32[0];
     dst->qw[1] = (uint64_t) src->u32[2] * dst->u32[2];
