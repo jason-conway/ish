@@ -99,6 +99,7 @@ void vec_unpackl_qdq128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);
 void vec_unpackh_bw128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);
 void vec_unpackh_w128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);
 void vec_unpackh_d128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);
+void vec_unpackh_dq128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);
 void vec_shuffle_lw128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst, uint8_t encoding);
 void vec_shuffle_d128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst, uint8_t encoding);
 void vec_compare_eqb128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);

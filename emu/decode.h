@@ -302,7 +302,8 @@ restart:
                            READMODRM; V_OP(packss_d, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0x6c: TRACEI("punpcklqdq xmm:modrm, xmm");
                            READMODRM; V_OP(unpackl_qdq, xmm_modrm_val, xmm_modrm_reg,128); break;
-
+                case 0x6d: TRACEI("punpckhqdq xmm:modrm, xmm");
+                           READMODRM; V_OP(unpackh_dq, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0x6e: TRACEI("movd modrm, xmm");
                            READMODRM; VMOV(modrm_val, xmm_modrm_reg,32); break;
 

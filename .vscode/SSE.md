@@ -10,3 +10,4 @@
 | pcmpeqw     | 66 0F 75 /r PCMPEQW xmm1, xmm2/m128   | https://www.felixcloutier.com/x86/pcmpeqb:pcmpeqw:pcmpeqd                  |
 | paddw       | 66 0F FD /r PADDW xmm1, xmm2/m128     | https://www.felixcloutier.com/x86/paddb:paddw:paddd:paddq                  |
 | punpckhdq   | 66 0F 6A /r PUNPCKHDQ xmm1, xmm2/m128 | https://www.felixcloutier.com/x86/punpckhbw:punpckhwd:punpckhdq:punpckhqdq |
+| punpckhqdq | 66 0F 6D /r PUNPCKHQDQ xmm1, xmm2/m128 | https://www.felixcloutier.com/x86/punpckhbw:punpckhwd:punpckhdq:punpckhqdq |

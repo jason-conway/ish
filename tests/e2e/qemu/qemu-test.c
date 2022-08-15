@@ -2526,7 +2526,7 @@ void test_sse(void)
     asm volatile ("emms");
 
     SSE_OP2(punpcklqdq);
-    // SSE_OP2(punpckhqdq);
+    SSE_OP2(punpckhqdq);
     SSE_OP2(andps);
     SSE_OP2(andpd);
     SSE_OP2(andnps);
