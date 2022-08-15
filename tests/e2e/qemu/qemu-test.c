@@ -2557,8 +2557,8 @@ void test_sse(void)
 
     SHIFT_DQ_IM(psrld, 7);
     SHIFT_DQ_IM(psrld, 32);
-    // SHIFT_OP(psrad, 7);
-    // SHIFT_OP(psrad, 32);
+    SHIFT_DQ_IM(psrad, 7);
+    SHIFT_DQ_IM(psrad, 32);
     SHIFT_DQ_IM(pslld, 7);
     SHIFT_DQ_IM(pslld, 32);
 

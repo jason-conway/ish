@@ -323,6 +323,8 @@ restart:
                             switch (modrm.opcode) {
                                 case 2: TRACEI("psrld imm, xmm");
                                         READIMM8; V_OP(imm_shiftr_d, imm, xmm_modrm_reg, 128); break;
+                                case 4: TRACEI("psrad imm, xmm");
+                                        READIMM8; V_OP(imm_shiftrs_d, imm, xmm_modrm_reg, 128); break;
                                 case 6: TRACEI("pslld imm, xmm");
                                         READIMM8; V_OP(imm_shiftl_d, imm, xmm_modrm_reg, 128); break;
                                 default: UNDEFINED;

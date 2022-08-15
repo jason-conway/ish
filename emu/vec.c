@@ -141,6 +141,15 @@ void vec_shiftr_q128(NO_CPU, union xmm_reg *amount, union xmm_reg *dst) {
     }
 }
 
+void vec_imm_shiftrs_d128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
+    for (unsigned i = 0; i < 4; i++) {
+        if (amount > 31)
+            dst->u32[i] = ((dst->u32[i] >> 31) & (uint32_t)1) ? 0xffffffff : 0;
+        else
+            dst->u32[i] = ((int32_t)(dst->u32[i])) >> (int32_t)amount;
+    }
+}
+
 void vec_add_b128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
     for (unsigned i = 0; i < array_size(src->u8); i++)
         dst->u8[i] += src->u8[i];
