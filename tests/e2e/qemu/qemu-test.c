@@ -2426,19 +2426,19 @@ void test_sse(void)
 
     // NOTE: when the MMX op is implemented, just change SSE_OP2 to MMX_OP2, which tests both
     SSE_OP2(punpcklbw);
-    MMX_OP2(punpcklwd);
+    // MMX_OP2(punpcklwd);
     SSE_OP2(punpckldq);
     // MMX_OP2(packsswb);
     // MMX_OP2(pcmpgtb);
     // MMX_OP2(pcmpgtw);
     // MMX_OP2(pcmpgtd);
     // MMX_OP2(packuswb);
-    MMX_OP2(punpckhbw);
-    MMX_OP2(punpckhwd);
-    SSE_OP2(punpckhdq);
-    SSE_OP2(packssdw);
+    // MMX_OP2(punpckhbw);
+    // MMX_OP2(punpckhwd);
+    // MMX_OP2(punpckhdq);
+    // MMX_OP2(packssdw);
     SSE_OP2(pcmpeqb);
-    MMX_OP2(pcmpeqw);
+    // MMX_OP2(pcmpeqw);
     SSE_OP2(pcmpeqd);
 
     MMX_OP2(paddq);
@@ -2464,14 +2464,14 @@ void test_sse(void)
     // MMX_OP2(pmaxsw);
     MMX_OP2(pxor);
     MMX_OP2(pmuludq);
-    MMX_OP2(pmaddwd);
+    // MMX_OP2(pmaddwd);
     // MMX_OP2(psadbw);
     // MMX_OP2(psubb);
-    MMX_OP2(psubw);
+    // MMX_OP2(psubw);
     // MMX_OP2(psubd);
     SSE_OP2(psubq);
     SSE_OP2(paddb);
-    MMX_OP2(paddw);
+    // MMX_OP2(paddw);
     SSE_OP2(paddd);
 
     // MMX_OP2(pavgb);
@@ -2526,7 +2526,7 @@ void test_sse(void)
     asm volatile ("emms");
 
     SSE_OP2(punpcklqdq);
-    SSE_OP2(punpckhqdq);
+    // SSE_OP2(punpckhqdq);
     SSE_OP2(andps);
     SSE_OP2(andpd);
     SSE_OP2(andnps);
@@ -2552,8 +2552,8 @@ void test_sse(void)
     // SHIFT_OP(psrlw, 16);
     // SHIFT_OP(psraw, 7);
     // SHIFT_OP(psraw, 16);
-    SHIFT_OP(psllw, 7);
-    SHIFT_OP(psllw, 16);
+    // SHIFT_OP(psllw, 7);
+    // SHIFT_OP(psllw, 16);
 
     SHIFT_DQ_IM(psrld, 7);
     SHIFT_DQ_IM(psrld, 32);
