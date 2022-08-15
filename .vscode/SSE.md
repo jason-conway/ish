@@ -14,3 +14,4 @@
 | psubw       | 66 0F F9 /r PSUBW xmm1, xmm2/m128      | https://www.felixcloutier.com/x86/psubb:psubw:psubd                        |
 | psrad       | 66 0F 72 /4 ib PSRAD xmm1, imm8        | https://www.felixcloutier.com/x86/psraw:psrad:psraq                        |
 | psraw       | 66 0F 71 /4 ib PSRAW xmm1, imm8        | https://www.felixcloutier.com/x86/psraw:psrad:psraq                        |
+| pmulhuw     | 66 0F E4 /r PMULHUW xmm1, xmm2/m128    | https://www.felixcloutier.com/x86/pmulhuw                                  |

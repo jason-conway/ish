@@ -2452,7 +2452,7 @@ void test_sse(void)
     SSE_OP2(pmaxub);
     SSE_OP2(pandn);
 
-    // MMX_OP2(pmulhuw);
+    SSE_OP2(pmulhuw);
     MMX_OP2(pmulhw);
 
     // MMX_OP2(psubsb);

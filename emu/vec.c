@@ -482,3 +482,10 @@ void vec_mulu64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
     }
     dst->qw = d.qw;
 }
+
+void vec_muluu128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
+    for (int i = 0; i < 8; i++) {
+        uint32_t res = dst->u16[i] * src->u16[i];
+        dst->u16[i] = ((res >> 16) & 0xffff);
+    }
+}
