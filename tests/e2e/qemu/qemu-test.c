@@ -2426,7 +2426,7 @@ void test_sse(void)
 
     // NOTE: when the MMX op is implemented, just change SSE_OP2 to MMX_OP2, which tests both
     SSE_OP2(punpcklbw);
-    // MMX_OP2(punpcklwd);
+    MMX_OP2(punpcklwd);
     SSE_OP2(punpckldq);
     // MMX_OP2(packsswb);
     // MMX_OP2(pcmpgtb);

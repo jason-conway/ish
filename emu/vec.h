@@ -87,6 +87,7 @@ void vec_cvttps2dq32(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);
 
 // TODO organize
 void vec_unpackl_bw128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);
+void vec_unpackl_w128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);
 void vec_unpackl_dq128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);
 void vec_unpackl_dq64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
 void vec_unpackl_qdq128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);

@@ -303,6 +303,12 @@ void vec_unpackl_bw128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
         dst->u8[i*2] = dst->u8[i];
     }
 }
+void vec_unpackl_w128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
+    for (int i = 3; i >= 0; i--) {
+        dst->u16[i*2 + 1] = src->u16[i];
+        dst->u16[i*2] = dst->u16[i];
+    }
+}
 void vec_unpackl_dq128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
     dst->u32[3] = src->u32[1];
     dst->u32[2] = dst->u32[1];
