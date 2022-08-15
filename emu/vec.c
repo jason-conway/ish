@@ -43,15 +43,14 @@ VEC_ZERO_COPY(64, 64)
 VEC_ZERO_COPY(64, 32)
 VEC_ZERO_COPY(32, 32)
 
-void vec_merge32(NO_CPU, const void *src, void *dst) {
-    memcpy(dst, src, 4);
-}
-void vec_merge64(NO_CPU, const void *src, void *dst) {
-    memcpy(dst, src, 8);
-}
-void vec_merge128(NO_CPU, const void *src, void *dst) {
-    memcpy(dst, src, 16);
-}
+#define VEC_MERGE(size) \
+    void vec_merge##size(NO_CPU, const void *src, void *dst) { \
+        memcpy(dst, src, size / 8); \
+    }
+
+VEC_MERGE(32);
+VEC_MERGE(64);
+VEC_MERGE(128);
 
 void vec_imm_shiftl_q128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
     if (amount > 63) {
@@ -60,6 +59,12 @@ void vec_imm_shiftl_q128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
         dst->qw[0] <<= amount;
         dst->qw[1] <<= amount;
     }
+}
+void vec_imm_shiftl_q64(NO_CPU, const uint8_t amount, union mm_reg *dst) {
+    if (amount > 63)
+        dst->qw = 0;
+    else
+        dst->qw <<= amount;
 }
 
 void vec_imm_shiftl_d128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
@@ -73,12 +78,37 @@ void vec_imm_shiftl_d128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
     }
 }
 
-void vec_imm_shiftl_q64(NO_CPU, const uint8_t amount, union mm_reg *dst) {
-    if (amount > 63)
-        dst->qw = 0;
+
+
+void vec_imm_shiftl_dq128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
+    if (amount > 15)
+        zero_xmm(dst);
     else
-        dst->qw <<= amount;
+        dst->u128 <<= amount * 8;
 }
+
+void vec_imm_shiftl_w128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
+    if (amount > 15) {
+        zero_xmm(dst);
+    } else {
+        for (int i = 0; i < 8; i++) {
+            dst->u16[i] <<= amount;
+        }
+    }
+}
+void vec_imm_shiftl_w64(NO_CPU, const uint8_t amount, union mm_reg *dst) {
+    if (amount > 15) {
+        dst->qw = 0;
+    } else {
+        union _mm d = { .qw = dst->qw };
+        d.u16[0] <<= amount;
+        d.u16[1] <<= amount;
+        d.u16[2] <<= amount;
+        d.u16[3] <<= amount;
+        dst->qw = d.qw;
+    }
+}
+
 
 void vec_imm_shiftr_q128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
     if (amount > 63) {
@@ -114,35 +144,6 @@ void vec_imm_shiftr_dq128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
         dst->u128 >>= amount * 8;
 }
 
-void vec_imm_shiftl_dq128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
-    if (amount > 15)
-        zero_xmm(dst);
-    else
-        dst->u128 <<= amount * 8;
-}
-
-void vec_imm_shiftl_w64(NO_CPU, const uint8_t amount, union mm_reg *dst) {
-    if (amount > 15) {
-        dst->qw = 0;
-    } else {
-        union _mm d = { .qw = dst->qw };
-        d.u16[0] <<= amount;
-        d.u16[1] <<= amount;
-        d.u16[2] <<= amount;
-        d.u16[3] <<= amount;
-        dst->qw = d.qw;
-    }
-}
-void vec_imm_shiftl_w128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
-    if (amount > 15) {
-        zero_xmm(dst);
-    } else {
-        for (int i = 0; i < 8; i++) {
-            dst->u16[i] <<= amount;
-        }
-    }
-}
-
 void vec_imm_shiftrs_d128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
     if (amount > 31) {
         zero_xmm(dst);
@@ -162,6 +163,7 @@ void vec_imm_shiftrs_w128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
     }
 }
 
+
 void vec_shiftl_q128(NO_CPU, union xmm_reg *amount, union xmm_reg *dst) {
     uint64_t amount_qw = amount->qw[0];
 
@@ -172,7 +174,6 @@ void vec_shiftl_q128(NO_CPU, union xmm_reg *amount, union xmm_reg *dst) {
         dst->qw[1] <<= amount_qw;
     }
 }
-
 void vec_shiftr_q128(NO_CPU, union xmm_reg *amount, union xmm_reg *dst) {
     uint64_t amount_qw = amount->qw[0];
 
@@ -184,46 +185,47 @@ void vec_shiftr_q128(NO_CPU, union xmm_reg *amount, union xmm_reg *dst) {
     }
 }
 
-void vec_add_b128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
-    for (unsigned i = 0; i < array_size(src->u8); i++)
-        dst->u8[i] += src->u8[i];
-}
-void vec_add_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
-    for (unsigned i = 0; i < array_size(src->u16); i++)
-        dst->u16[i] += src->u16[i];
-}
-void vec_add_w64(NO_CPU, union mm_reg *src, union mm_reg *dst) {
-    union _mm s = { .qw = src->qw };
-    union _mm d = { .qw = dst->qw };
-    for (unsigned i = 0; i < 4; i++)
-        d.u16[i] += s.u16[i];
-    dst->qw = d.qw;
-}
-void vec_add_d128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
-    for (unsigned i = 0; i < array_size(src->u32); i++)
-        dst->u32[i] += src->u32[i];
-}
-void vec_add_q128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
-    dst->qw[0] += src->qw[0];
-    dst->qw[1] += src->qw[1];
+#define VEC_OP_MMX(name, op, field) \
+    void vec_##name##64(NO_CPU, union mm_reg *src, union mm_reg *dst) { \
+        union _mm s = { .qw = src->qw }; \
+        union _mm d = { .qw = dst->qw }; \
+        for (unsigned i = 0; i < array_size(s.field); i++) { \
+            d.field[i] op##= s.field[i]; \
+        } \
+        dst->qw = d.qw; \
+    }
+
+#define VEC_OP_SSE(name, op, field) \
+    void vec_##name##128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) { \
+        for (unsigned i = 0; i < array_size(dst->field); i++) { \
+            dst->field[i] op##= src->field[i]; \
+        } \
+    }
+
+
+VEC_OP_SSE(add_b, +, u8);
+VEC_OP_SSE(add_w, +, u16);
+VEC_OP_SSE(add_d, +, u32);
+VEC_OP_SSE(add_q, +, qw);
+
+VEC_OP_SSE(sub_b, -, u8);
+VEC_OP_SSE(sub_w, -, u16);
+VEC_OP_SSE(sub_d, -, u32);
+VEC_OP_SSE(sub_q, -, qw);
+
+VEC_OP_MMX(add_b, +, u8);
+VEC_OP_MMX(add_w, +, u16);
+VEC_OP_MMX(sub_w, -, u16);
+
+void vec_add_d64(NO_CPU, union mm_reg *src, union mm_reg *dst) {
+    dst->dw[0] += src->dw[0];
+    dst->dw[1] += src->dw[1];
 }
 void vec_add_q64(NO_CPU, union mm_reg *src, union mm_reg *dst) {
     dst->qw += src->qw;
 }
-void vec_sub_q128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
-    dst->qw[0] -= src->qw[0];
-    dst->qw[1] -= src->qw[1];
-}
-void vec_sub_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
-    for (unsigned i = 0; i < array_size(src->u16); i++)
-        dst->u16[i] += src->u16[i];
-}
-void vec_sub_w64(NO_CPU, union mm_reg *src, union mm_reg *dst) {
-    union _mm s = { .qw = src->qw };
-    union _mm d = { .qw = dst->qw };
-    for (unsigned i = 0; i < 4; i++)
-        d.u16[i] -= s.u16[i];
-    dst->qw = d.qw;
+void vec_sub_q64(NO_CPU, union mm_reg *src, union mm_reg *dst) {
+    dst->qw -= src->qw;
 }
 
 void vec_madd_d64(NO_CPU, union mm_reg *src, union mm_reg *dst) {
@@ -531,20 +533,6 @@ void vec_mull128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
         dst->u16[i] = (uint16_t)(dst->u16[i] * src->u16[i]);
     }
 }
-
-void vec_mulu128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
-    for (int i = 0; i < 8; i++) {
-        uint32_t res = ((int16_t)dst->u16[i] * (int16_t)src->u16[i]);
-        dst->u16[i] = ((res >> 16) & 0xffff);
-    }
-}
-void vec_muluu128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
-    for (int i = 0; i < 8; i++) {
-        uint32_t res = dst->u16[i] * src->u16[i];
-        dst->u16[i] = ((res >> 16) & 0xffff);
-    }
-}
-
 void vec_mull64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
     union _mm s = { .qw = src->qw };
     union _mm d = { .qw = dst->qw };
@@ -554,6 +542,12 @@ void vec_mull64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
     dst->qw = d.qw;
 }
 
+void vec_mulu128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
+    for (int i = 0; i < 8; i++) {
+        uint32_t res = ((int16_t)dst->u16[i] * (int16_t)src->u16[i]);
+        dst->u16[i] = ((res >> 16) & 0xffff);
+    }
+}
 void vec_mulu64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
     union _mm s = { .qw = src->qw };
     union _mm d = { .qw = dst->qw };
@@ -564,6 +558,12 @@ void vec_mulu64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
     dst->qw = d.qw;
 }
 
+void vec_muluu128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
+    for (int i = 0; i < 8; i++) {
+        uint32_t res = dst->u16[i] * src->u16[i];
+        dst->u16[i] = ((res >> 16) & 0xffff);
+    }
+}
 void vec_muluu64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
     union _mm s = { .qw = src->qw };
     union _mm d = { .qw = dst->qw };

@@ -35,15 +35,22 @@ void vec_imm_shiftrs_d128(NO_CPU, const uint8_t amount, union xmm_reg *dst);
 void vec_imm_shiftrs_w128(NO_CPU, const uint8_t amount, union xmm_reg *dst);
 
 void vec_add_b128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
+void vec_add_b64(NO_CPU, union mm_reg *src, union mm_reg *dst);
 void vec_add_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_add_w64(NO_CPU, union mm_reg *src, union mm_reg *dst);
 void vec_add_d128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
+void vec_add_d64(NO_CPU, union mm_reg *src, union mm_reg *dst);
 void vec_add_q128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_add_q64(NO_CPU, union mm_reg *src, union mm_reg *dst);
 
+void vec_sub_b128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
+void vec_sub_b64(NO_CPU, union mm_reg *src, union mm_reg *dst);
 void vec_sub_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_sub_w64(NO_CPU, union mm_reg *src, union mm_reg *dst);
+void vec_sub_d128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
+void vec_sub_d64(NO_CPU, union mm_reg *src, union mm_reg *dst);
 void vec_sub_q128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
+void vec_sub_q64(NO_CPU, union mm_reg *src, union mm_reg *dst);
 
 void vec_mulu_dq128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_mulu_dq64(NO_CPU, union mm_reg *src, union mm_reg *dst);
