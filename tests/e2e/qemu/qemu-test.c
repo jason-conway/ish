@@ -2435,7 +2435,7 @@ void test_sse(void)
     // MMX_OP2(packuswb);
     SSE_OP2(punpckhbw);
     SSE_OP2(punpckhwd);
-    // MMX_OP2(punpckhdq);
+    SSE_OP2(punpckhdq);
     SSE_OP2(packssdw);
     SSE_OP2(pcmpeqb);
     SSE_OP2(pcmpeqw);

@@ -367,6 +367,12 @@ void vec_unpackh_w128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
         dst->u16[2 * i + 1] = src->u16[i + 4];
     }
 }
+void vec_unpackh_d128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
+    dst->u32[0] = dst->u32[2];
+    dst->u32[1] = src->u32[2];
+    dst->u32[2] = dst->u32[3];
+    dst->u32[3] = src->u32[3];
+}
 
 void vec_packss_d128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
     dst->u32[0] = satd(dst->u32[0]) | (satd(dst->u32[1]) << 16);
