@@ -314,6 +314,8 @@ restart:
                            READMODRM; READIMM8; V_OP_IMM(shuffle_d, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0x71: READMODRM_NOMEM;
                            switch (modrm.opcode) {
+                                case 4: TRACEI("psraw imm, xmm");
+                                        READIMM8; V_OP(imm_shiftrs_w, imm, xmm_modrm_reg, 128); break;
                                 case 6: TRACEI("psllw imm, xmm");
                                         READIMM8; V_OP(imm_shiftl_w, imm, xmm_modrm_reg, 128); break;
                                 default: UNDEFINED;
