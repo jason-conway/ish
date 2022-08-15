@@ -18,6 +18,7 @@ void vec_merge32(NO_CPU, const void *src, void *dst);
 void vec_merge64(NO_CPU, const void *src, void *dst);
 void vec_merge128(NO_CPU, const void *src, void *dst);
 
+void vec_imm_shiftl_w128(NO_CPU, const uint8_t amount, union xmm_reg *dst);
 void vec_imm_shiftl_q128(NO_CPU, const uint8_t amount, union xmm_reg *dst);
 void vec_imm_shiftl_d128(NO_CPU, const uint8_t amount, union xmm_reg *dst);
 void vec_imm_shiftl_q64(NO_CPU, const uint8_t amount, union mm_reg *dst);

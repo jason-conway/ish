@@ -309,7 +309,13 @@ restart:
 
                 case 0x70: TRACEI("pshufd xmm:modrm, xmm, imm8");
                            READMODRM; READIMM8; V_OP_IMM(shuffle_d, xmm_modrm_val, xmm_modrm_reg,128); break;
-
+                case 0x71: READMODRM_NOMEM;
+                           switch (modrm.opcode) {
+                                case 6: TRACEI("psllw imm, xmm");
+                                        READIMM8; V_OP(imm_shiftl_w, imm, xmm_modrm_reg, 128); break;
+                                default: UNDEFINED;
+                            }
+                            break;
                 case 0x72: READMODRM_NOMEM;
                             switch (modrm.opcode) {
                                 case 2: TRACEI("psrld imm, xmm");
