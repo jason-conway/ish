@@ -145,6 +145,10 @@ void vec_add_b128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
     for (unsigned i = 0; i < array_size(src->u8); i++)
         dst->u8[i] += src->u8[i];
 }
+void vec_add_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
+    for (unsigned i = 0; i < array_size(src->u16); i++)
+        dst->u16[i] += src->u16[i];
+}
 void vec_add_d128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
     for (unsigned i = 0; i < array_size(src->u32); i++)
         dst->u32[i] += src->u32[i];

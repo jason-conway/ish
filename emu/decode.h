@@ -397,6 +397,8 @@ restart:
                            READMODRM; V_OP(sub_q, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0xfc: TRACEI("paddb xmm:modrm, xmm");
                            READMODRM; V_OP(add_b, xmm_modrm_val, xmm_modrm_reg,128); break;
+                case 0xfd: TRACEI("paddw xmm:modrm, xmm");
+                           READMODRM; V_OP(add_w, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0xfe: TRACEI("paddd xmm:modrm, xmm");
                            READMODRM; V_OP(add_d, xmm_modrm_val, xmm_modrm_reg,128); break;
 #else

@@ -8,3 +8,4 @@
 | packssdw    | 66 0F 6B /r PACKSSDW xmm1, xmm2/m128  | https://www.felixcloutier.com/x86/packsswb:packssdw                        |
 | psllw       | 66 0F 71 /6 ib PSLLW xmm1, imm8       | https://www.felixcloutier.com/x86/psllw:pslld:psllq                        |
 | pcmpeqw     | 66 0F 75 /r PCMPEQW xmm1, xmm2/m128   | https://www.felixcloutier.com/x86/pcmpeqb:pcmpeqw:pcmpeqd                  |
+| paddw       | 66 0F FD /r PADDW xmm1, xmm2/m128     | https://www.felixcloutier.com/x86/paddb:paddw:paddd:paddq                  |

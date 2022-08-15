@@ -30,6 +30,7 @@ void vec_imm_shiftr_dq128(NO_CPU, uint8_t amount, union xmm_reg *dst);
 void vec_shiftl_q128(NO_CPU, union xmm_reg *amount, union xmm_reg *dst);
 void vec_shiftr_q128(NO_CPU, union xmm_reg *amount, union xmm_reg *dst);
 void vec_add_b128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
+void vec_add_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_add_d128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_add_q128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_add_q64(NO_CPU, union mm_reg *src, union mm_reg *dst);

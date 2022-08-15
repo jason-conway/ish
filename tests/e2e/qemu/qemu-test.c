@@ -2471,7 +2471,7 @@ void test_sse(void)
     // MMX_OP2(psubd);
     SSE_OP2(psubq);
     SSE_OP2(paddb);
-    // MMX_OP2(paddw);
+    SSE_OP2(paddw);
     SSE_OP2(paddd);
 
     // MMX_OP2(pavgb);
