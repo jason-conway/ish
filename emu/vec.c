@@ -297,22 +297,28 @@ VEC_CVT(ss2sd32, float, double)
 PACKED_VEC_CVT(tpd2dq64, f64, u32, double, int32_t, 2)
 PACKED_VEC_CVT(tps2dq32, f32, u32, float, int32_t, 4)
 
-void vec_unpack_bw128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
+void vec_unpackl_bw128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
     for (int i = 7; i >= 0; i--) {
         dst->u8[i*2 + 1] = src->u8[i];
         dst->u8[i*2] = dst->u8[i];
     }
 }
-void vec_unpack_dq128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
+void vec_unpackl_dq128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
     dst->u32[3] = src->u32[1];
     dst->u32[2] = dst->u32[1];
     dst->u32[1] = src->u32[0];
 }
-void vec_unpack_dq64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
+void vec_unpackl_dq64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
     dst->dw[1] = src->dw[0];
 }
-void vec_unpack_qdq128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
+void vec_unpackl_qdq128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
     dst->qw[1] = src->qw[0];
+}
+void vec_unpackh_bw128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
+    for (int i = 0; i < 8; i++) {
+        dst->u8[2 * i + 0] = dst->u8[i + 8];
+        dst->u8[2 * i + 1] = src->u8[i + 8];
+    }
 }
 
 void vec_shuffle_lw128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst, uint8_t encoding) {
