@@ -9,15 +9,14 @@ static inline void zero_xmm(union xmm_reg *xmm) {
     xmm->qw[1] = 0;
 }
 
-static inline uint32_t satd(uint32_t v) {
-    uint32_t sat = v >> 0;
-    if (sat > 0xffff8000)
-        sat &= 0xffff;
-    else if (sat > 0x7fffffff)
-        sat = 0x8000;
-    else if (sat > 0x7fff)
-        sat = 0x7fff;
-    return sat;
+static inline uint32_t satd(uint32_t dw) {
+    if (dw > 0xffff8000)
+        dw &= 0xffff;
+    else if (dw > 0x7fffffff)
+        dw = 0x8000;
+    else if (dw > 0x7fff)
+        dw = 0x7fff;
+    return dw;
 }
 
 #define VEC_ZERO_COPY(zero, copy) \
