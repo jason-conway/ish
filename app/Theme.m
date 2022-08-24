@@ -13,16 +13,18 @@ char *get_documents_directory_impl(void) {
     return strdup(NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject.UTF8String);
 }
 
+#define THEME_VERSION 1
+
 @implementation UIColor (iSH)
 - (nullable instancetype)ish_initWithHexString:(NSString *)string {
-    if (!string.length) {
+    if (![string hasPrefix:@"#"]) {
         return nil;
     }
     NSScanner *scanner = [NSScanner scannerWithString:string];
     // Skip the leading #
     [scanner setScanLocation:1];
     unsigned int value;
-    if (![scanner scanHexInt:&value]) {
+    if (![scanner scanHexInt:&value] || scanner.scanLocation != string.length) {
         return nil;
     }
     unsigned int red;
@@ -148,6 +150,11 @@ NSString *const ThemeUpdatedNotification = @"ThemeUpdatedNotification";
 @property(readonly, nonnull) NSData *data;
 @end
 
+// TODO: Move these to Linux
+#if ISH_LINUX
+char *(*get_documents_directory)(void);
+#endif
+
 @implementation Theme {
 }
 
@@ -179,6 +186,11 @@ NSString *const ThemeUpdatedNotification = @"ThemeUpdatedNotification";
     if (![json isKindOfClass:NSDictionary.class]) {
         return nil;
     }
+    id version = json[@"version"];
+    if (![version isKindOfClass:NSNumber.class] || ((NSNumber *)version).integerValue <= 0 || ((NSNumber *)version).integerValue > THEME_VERSION) {
+        NSLog(@"Rejecting theme %@ with invalid version number", name);
+        return nil;
+    }
     id shared = json[@"shared"];
     id light = json[@"light"];
     id dark = json[@"dark"];
@@ -190,6 +202,7 @@ NSString *const ThemeUpdatedNotification = @"ThemeUpdatedNotification";
         Palette *darkPalette = [[Palette alloc] initWithSerializedRepresentation:dark];
         return lightPalette && darkPalette ? [self initWithName:name lightPalette:lightPalette darkPalette:darkPalette] : nil;
     } else {
+        NSLog(@"Rejecting theme %@ with invalid palette(s)", name);
         return nil;
     }
 }
@@ -199,58 +212,19 @@ NSString *const ThemeUpdatedNotification = @"ThemeUpdatedNotification";
     if (!defaultThemes) {
         defaultThemes = @[
             [[self alloc] initWithName:@"Default"
-                          lightPalette:[[Palette alloc] initWithForegroundColor:@"#FD9F20"
+                          lightPalette:[[Palette alloc] initWithForegroundColor:@"#000"
                                                                 backgroundColor:@"#fff"
                                                                     cursorColor:nil
                                                           colorPaletteOverrides:nil]
-                           darkPalette:[[Palette alloc] initWithForegroundColor:@"#FD9F20"
+                           darkPalette:[[Palette alloc] initWithForegroundColor:@"#fff"
                                                                 backgroundColor:@"#000"
                                                                     cursorColor:nil
                                                           colorPaletteOverrides:nil]],
-            [[self alloc] initWithName:@"Pastel"
-                          lightPalette:[[Palette alloc] initWithForegroundColor:@"#f7f6ec"
-                                                                backgroundColor:@"#1e1e1e"
-                                                                    cursorColor:@"#edcf4f"
-                                                          colorPaletteOverrides:@[
-                            @"#343935",
-                            @"#cf3f61",
-                            @"#7bb75b",
-                            @"#e9b32a",
-                            @"#4c9ad4",
-                            @"#a57fc4",
-                            @"#389aad",
-                            @"#fafaf6",
-                            @"#595b59",
-                            @"#d18fa6",
-                            @"#767f2c",
-                            @"#78592f",
-                            @"#135979",
-                            @"#604291",
-                            @"#76bbca",
-                            @"#b2b5ae",
-                          ]]
-                           darkPalette:[[Palette alloc] initWithForegroundColor:@"#f7f6ec"
-                                                                backgroundColor:@"#1e1e1e"
-                                                                    cursorColor:@"#edcf4f"
-                                                          colorPaletteOverrides:@[
-                            @"#343935",
-                            @"#cf3f61",
-                            @"#7bb75b",
-                            @"#e9b32a",
-                            @"#4c9ad4",
-                            @"#a57fc4",
-                            @"#389aad",
-                            @"#fafaf6",
-                            @"#595b59",
-                            @"#d18fa6",
-                            @"#767f2c",
-                            @"#78592f",
-                            @"#135979",
-                            @"#604291",
-                            @"#76bbca",
-                            @"#b2b5ae",
-                           ]]
-            ],
+            [[self alloc] initWithName:@"1337"
+                               palette:[[Palette alloc] initWithForegroundColor:@"#0f0"
+                                                                backgroundColor:@"#000"
+                                                                    cursorColor:nil
+                                                          colorPaletteOverrides:nil]],
             [[self alloc] initWithName:@"Solarized"
                           lightPalette:[[Palette alloc] initWithForegroundColor:@"#657b83"
                                                                 backgroundColor:@"#fdf6e3"
@@ -342,8 +316,10 @@ NSString *const ThemeUpdatedNotification = @"ThemeUpdatedNotification";
 
 - (NSData *)data {
     return [NSJSONSerialization dataWithJSONObject:self.lightPalette == self.darkPalette ? @{
+        @"version": @(THEME_VERSION),
         @"shared" : self.lightPalette.serializedRepresentation,
     } : @{
+        @"version": @(THEME_VERSION),
         @"light": self.lightPalette.serializedRepresentation,
         @"dark": self.darkPalette.serializedRepresentation,
     } options:NSJSONWritingSortedKeys | NSJSONWritingPrettyPrinted error:nil];
@@ -369,11 +345,11 @@ NSString *const ThemeUpdatedNotification = @"ThemeUpdatedNotification";
     [self.data writeToURL:[self.class.themesDirectory URLByAppendingPathComponent:[name stringByAppendingString:@".json"]] atomically:YES];
 }
 
-+ (BOOL)addUserTheme:(Theme *)theme {
-    if ([self.class themeForName:theme.name includingDefaultThemes:NO]) {
+- (BOOL)addUserTheme {
+    if ([self.class themeForName:self.name includingDefaultThemes:NO]) {
         return NO;
     } else {
-        [theme.data writeToURL:[self.class.themesDirectory URLByAppendingPathComponent:[theme.name stringByAppendingString:@".json"]] atomically:YES];
+        [self.data writeToURL:[self.class.themesDirectory URLByAppendingPathComponent:[self.name stringByAppendingString:@".json"]] atomically:YES];
         return YES;
     }
 }
