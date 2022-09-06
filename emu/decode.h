@@ -268,6 +268,10 @@ restart:
                            READMODRM; VMOV(xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0x11: TRACEI("movupd xmm, xmm:modrm");
                            READMODRM; VMOV(xmm_modrm_reg, xmm_modrm_val,128); break;
+                case 0x12: TRACEI("movlpd xmm, xmm:modrm");
+                           READMODRM; V_OP(movl_pd, xmm_modrm_val, xmm_modrm_reg,128); break;
+                case 0x13: TRACEI("movlpd xmm:modrm, reg");
+                           READMODRM; V_OP(movl_mem_pd, xmm_modrm_val, modrm_reg,128); break;
                 case 0x14: TRACEI("unpcklpd xmm, xmm:modrm");
                            READMODRM; V_OP(unpackl_pd, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0x15: TRACEI("unpckhpd xmm, xmm:modrm");
@@ -428,12 +432,16 @@ restart:
                            READMODRM; V_OP(subss_b, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0xe9: TRACEI("psubsw xmm:modrm, xmm");
                            READMODRM; V_OP(subss_w, xmm_modrm_val, xmm_modrm_reg,128); break;
+                case 0xea: TRACEI("pminsw xmm:modrm, xmm");
+                           READMODRM; V_OP(mins_w, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0xeb: TRACEI("por xmm:modrm, xmm");
                            READMODRM; V_OP(or, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0xec: TRACEI("paddsb xmm:modrm, xmm");
                            READMODRM; V_OP(addss_b, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0xed: TRACEI("paddsw xmm:modrm, xmm");
                            READMODRM; V_OP(addss_w, xmm_modrm_val, xmm_modrm_reg,128); break;
+                case 0xee: TRACEI("pmaxsw xmm:modrm, xmm");
+                           READMODRM; V_OP(maxs_w, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0xef: TRACEI("pxor xmm:modrm, xmm");
                            READMODRM; V_OP(xor, xmm_modrm_val, xmm_modrm_reg,128); break;
                 case 0xf3: TRACEI("psllq xmm:modrm, xmm");

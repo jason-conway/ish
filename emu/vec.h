@@ -74,7 +74,9 @@ void vec_xor128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_xor64(NO_CPU, union mm_reg *src, union mm_reg *dst);
 
 void vec_min_ub128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
+void vec_mins_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_max_ub128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
+void vec_maxs_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 
 void vec_single_fadd64(NO_CPU, const double *src, double *dst);
 void vec_single_fadd32(NO_CPU, const float *src, float *dst);
@@ -137,6 +139,8 @@ void vec_compares_gtb128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);
 void vec_compares_gtw128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);
 void vec_compares_gtd128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);
 
+void vec_movl_pd128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);
+void vec_movl_mem_pd128(NO_CPU, const union xmm_reg *src, uint64_t *dst);
 void vec_movmask_b128(NO_CPU, const union xmm_reg *src, uint32_t *dst);
 void vec_fmovmask_d128(NO_CPU, const union xmm_reg *src, uint32_t *dst);
 void vec_extract_w128(NO_CPU, const union xmm_reg *src, uint32_t *dst, uint8_t index);
