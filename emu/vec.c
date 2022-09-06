@@ -364,18 +364,6 @@ static bool cmps(float a, float b, int type) {
     return res;
 }
 
-static bool cmps(float a, float b, int type) {
-    bool res;
-    switch (type % 4) {
-        case 0: res = a == b; break;
-        case 1: res = a < b; break;
-        case 2: res = a <= b; break;
-        case 3: res = isnan(a) || isnan(b); break;
-    }
-    if (type >= 4) res = !res;
-    return res;
-}
-
 void vec_single_fcmp64(NO_CPU, const double *src, union xmm_reg *dst, uint8_t type) {
     dst->qw[0] = cmpd(dst->f64[0], *src, type) ? -1 : 0;
 }
