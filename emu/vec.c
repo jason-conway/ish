@@ -635,6 +635,12 @@ void vec_movl_pd128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
 void vec_movl_mem_pd128(NO_CPU, const union xmm_reg *src, uint64_t *dst) {
     *dst = src->qw[0];
 }
+void vec_movh_pd128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst) {
+    dst->qw[0] = src->qw[0];
+}
+void vec_movh_mem_pd128(NO_CPU, const union xmm_reg *src, uint64_t *dst) {
+    *dst = src->qw[0];
+}
 
 void vec_extract_w128(NO_CPU, const union xmm_reg *src, uint32_t *dst, uint8_t index) {
     *dst = src->u16[index % 8];

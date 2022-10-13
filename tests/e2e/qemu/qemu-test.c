@@ -2116,8 +2116,8 @@ static void test_enter(void)
 #endif
 #ifdef TEST_SSE
 
-typedef int __m64 __attribute__ ((__mode__ (__V2SI__)));
-typedef float __m128 __attribute__ ((__mode__(__V4SF__)));
+typedef int __m64 __attribute__ ((vector_size (8)));
+typedef float __m128 __attribute__ ((vector_size (16)));
 
 typedef union {
     double d[2];
@@ -2133,6 +2133,56 @@ static uint64_t __attribute__((aligned(16))) test_values[4][2] = {
     { 0x007c62c2085427f8, 0x231be9e8cde7438d },
     { 0x0f76255a085427f8, 0xc233e9e8c4c9439a },
 };
+
+#define MOV_OP(op, hi, rm)\
+{\
+    r.q[0] = r.q[1] = 0;\
+    if (rm)\
+        asm volatile (#op " %1, %0" : "=x" (r.dq) : "m" (a.d[hi]));\
+    else\
+        asm volatile (#op " %1, %0" : "=m" (r.d[hi]) : "x" (a.dq));\
+    printf("%-9s: a=" FMT64X "" FMT64X " r=" FMT64X "" FMT64X "\n", #op, a.q[1], a.q[0], r.q[1], r.q[0]);\
+}
+
+#define MOV_OP_REGMEM(op, hi, rm)\
+{\
+    int i;\
+    for(i=0;i<2;i++) {\
+    a.q[0] = test_values[2*i][0];\
+    a.q[1] = test_values[2*i][1];\
+    MOV_OP(op, hi, rm);\
+    }\
+}
+#define MOVL_OP2(op)\
+{\
+    MOV_OP_REGMEM(op, 0, 0);\
+    MOV_OP_REGMEM(op, 0, 1);\
+}
+#define MOVH_OP2(op)\
+{\
+    MOV_OP_REGMEM(op, 1, 0);\
+    MOV_OP_REGMEM(op, 1, 1);\
+}
+
+#define MOVNT_OP(op, x128)\
+{\
+    r.q[0] = r.q[1] = 0;\
+    if (x128)\
+        asm volatile (#op " %1, %0" : "=m" (r.dq) : "x" (a.dq));\
+    else\
+        asm volatile (#op " %1, %0" : "=m" (r.q[0]) : "y" (a.q[0]));\
+    printf("%-9s: a=" FMT64X "" FMT64X " r=" FMT64X "" FMT64X "\n", #op, a.q[1], a.q[0], r.q[1], r.q[0]);\
+}
+
+#define MOVNT_OP2(op, x128)\
+{\
+    int i;\
+    for(i=0;i<2;i++) {\
+    a.q[0] = test_values[2*i][0];\
+    a.q[1] = test_values[2*i][1];\
+    MOVNT_OP(op, x128);\
+    }\
+}
 
 #define SSE_OP(op)\
 {\
@@ -2622,9 +2672,12 @@ void test_sse(void)
         SSE_OPS(mul);
         SSE_OPS(sub);
         // SSE_OPS(min);
+        SSE_OP2(minss);
         SSE_OPS_S(div);
         // SSE_OPS(max);
+        SSE_OP2(maxss);
         // SSE_OPS(sqrt);
+        SSE_OP2(sqrtss);
         SSE_OPS_S(cmpeq);
         SSE_OPS_S(cmplt);
         SSE_OPS_S(cmple);
@@ -2688,6 +2741,14 @@ void test_sse(void)
     /* sse/mmx moves */
     // CVT_OP_XMM2MMX(movdq2q);
     // CVT_OP_MMX2XMM(movq2dq);
+    MOVL_OP2(movlps);
+    MOVH_OP2(movhps);
+    MOVL_OP2(movlpd);
+    MOVH_OP2(movhpd);
+    MOVNT_OP2(movntq, 0);
+    MOVNT_OP2(movntdq, 1);
+    SSE_OP2(movups);
+    SSE_OP2(movupd);
 
     /* int to float */
     a.l[0] = -6;
