@@ -2137,13 +2137,16 @@ static uint64_t __attribute__((aligned(16))) test_values[4][2] = {
 #define MOV_OP(op, hi, rm)\
 {\
     r.q[0] = r.q[1] = 0;\
-    if (rm)\
-        asm volatile (#op " %1, %0" : "=x" (r.dq) : "m" (a.d[hi]));\
-    else\
-        asm volatile (#op " %1, %0" : "=m" (r.d[hi]) : "x" (a.dq));\
-    printf("%-9s: a=" FMT64X "" FMT64X " r=" FMT64X "" FMT64X "\n", #op, a.q[1], a.q[0], r.q[1], r.q[0]);\
+    if (rm) {\
+        uint64_t mem = 0x0a0a0a0a0a0a0a0a;\
+        asm volatile (#op " %1, %0" : "=m" (mem) : "x" (a.dq));\
+        printf("%-9s: a=" FMT64X "" FMT64X " r=" FMT64X "\n", #op, a.q[1], a.q[0], mem);\
+    } else {\
+        uint64_t mem = a.q[hi];\
+        asm volatile (#op " %1, %0" : "=x" (r.dq) : "m" (mem));\
+        printf("%-9s: a=" FMT64X " r=" FMT64X "" FMT64X "\n", #op, mem, r.q[1], r.q[0]);\
+    }\
 }
-
 #define MOV_OP_REGMEM(op, hi, rm)\
 {\
     int i;\
@@ -2163,24 +2166,38 @@ static uint64_t __attribute__((aligned(16))) test_values[4][2] = {
     MOV_OP_REGMEM(op, 1, 0);\
     MOV_OP_REGMEM(op, 1, 1);\
 }
-
-#define MOVNT_OP(op, x128)\
+#define MOVNT_OP(op, quad)\
 {\
     r.q[0] = r.q[1] = 0;\
-    if (x128)\
+    if (quad) {\
         asm volatile (#op " %1, %0" : "=m" (r.dq) : "x" (a.dq));\
-    else\
+        printf("%-9s: a=" FMT64X "" FMT64X " r=" FMT64X "" FMT64X "\n", #op, a.q[1], a.q[0], r.q[1], r.q[0]);\
+    } else {\
         asm volatile (#op " %1, %0" : "=m" (r.q[0]) : "y" (a.q[0]));\
-    printf("%-9s: a=" FMT64X "" FMT64X " r=" FMT64X "" FMT64X "\n", #op, a.q[1], a.q[0], r.q[1], r.q[0]);\
+        printf("%-9s: a=" FMT64X " r=" FMT64X "\n", #op, a.q[0], r.q[0]);\
+    }\
 }
-
-#define MOVNT_OP2(op, x128)\
+#define MOVNT_OP2(op,quad)\
 {\
     int i;\
     for(i=0;i<2;i++) {\
     a.q[0] = test_values[2*i][0];\
     a.q[1] = test_values[2*i][1];\
-    MOVNT_OP(op, x128);\
+    MOVNT_OP(op, quad);\
+    }\
+}
+#define MOVU_OP(op)\
+{\
+    asm volatile (#op " %1, %0" : "=x" (r.dq) : "x" (a.dq));\
+    printf("%-9s: a=" FMT64X "" FMT64X " r=" FMT64X "" FMT64X "\n",#op, a.q[1], a.q[0], r.q[1], r.q[0]);\
+}
+#define MOVU_OP2(op)\
+{\
+    int i;\
+    for(i=0;i<2;i++) {\
+    a.q[0] = test_values[2*i][0];\
+    a.q[1] = test_values[2*i][1];\
+    MOVU_OP(op);\
     }\
 }
 
@@ -2672,12 +2689,9 @@ void test_sse(void)
         SSE_OPS(mul);
         SSE_OPS(sub);
         // SSE_OPS(min);
-        SSE_OP2(minss);
         SSE_OPS_S(div);
         // SSE_OPS(max);
-        SSE_OP2(maxss);
         // SSE_OPS(sqrt);
-        SSE_OP2(sqrtss);
         SSE_OPS_S(cmpeq);
         SSE_OPS_S(cmplt);
         SSE_OPS_S(cmple);
@@ -2747,8 +2761,12 @@ void test_sse(void)
     MOVH_OP2(movhpd);
     MOVNT_OP2(movntq, 0);
     MOVNT_OP2(movntdq, 1);
-    SSE_OP2(movups);
-    SSE_OP2(movupd);
+    MOVU_OP2(movups);
+    MOVU_OP2(movupd);
+
+    SSE_OP2(minss);
+    SSE_OP2(maxss);
+    SSE_OP2(sqrtss);
 
     /* int to float */
     a.l[0] = -6;
