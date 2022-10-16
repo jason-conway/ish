@@ -2138,7 +2138,7 @@ static uint64_t __attribute__((aligned(16))) test_values[4][2] = {
 {\
     r.q[0] = r.q[1] = 0;\
     if (rm) {\
-        uint64_t mem = 0x0a0a0a0a0a0a0a0a;\
+        uint64_t mem;\
         asm volatile (#op " %1, %0" : "=m" (mem) : "x" (a.dq));\
         printf("%-9s: a=" FMT64X "" FMT64X " r=" FMT64X "\n", #op, a.q[1], a.q[0], mem);\
     } else {\
@@ -2755,18 +2755,6 @@ void test_sse(void)
     /* sse/mmx moves */
     // CVT_OP_XMM2MMX(movdq2q);
     // CVT_OP_MMX2XMM(movq2dq);
-    MOVL_OP2(movlps);
-    MOVH_OP2(movhps);
-    MOVL_OP2(movlpd);
-    MOVH_OP2(movhpd);
-    MOVNT_OP2(movntq, 0);
-    MOVNT_OP2(movntdq, 1);
-    MOVU_OP2(movups);
-    MOVU_OP2(movupd);
-
-    SSE_OP2(minss);
-    SSE_OP2(maxss);
-    SSE_OP2(sqrtss);
 
     /* int to float */
     a.l[0] = -6;
@@ -2779,6 +2767,21 @@ void test_sse(void)
     CVT_OP_REG2XMM(cvtsi2sd);
     // CVT_OP_XMM(cvtdq2ps);
     // CVT_OP_XMM(cvtdq2pd);
+
+    /* sse/sse2 moves */
+    MOVL_OP2(movlps);
+    MOVH_OP2(movhps);
+    MOVL_OP2(movlpd);
+    MOVH_OP2(movhpd);
+    MOVNT_OP2(movntq, 0);
+    MOVNT_OP2(movntdq, 1);
+    MOVU_OP2(movups);
+    MOVU_OP2(movupd);
+
+    /* misc sse ops*/
+    SSE_OP2(minss);
+    SSE_OP2(maxss);
+    SSE_OP2(sqrtss);
 
     /* XXX: test PNI insns */
 #if 0
