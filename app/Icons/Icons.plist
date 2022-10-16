@@ -11,6 +11,15 @@
 		<key>description</key>
 		<string>Default</string>
 	</dict>
+	<key>local</key>
+	<dict>
+		<key>link</key>
+		<string>jasonconway.dev</string>
+		<key>author</key>
+		<string>@jason-conway</string>
+		<key>description</key>
+		<string>Development Branch</string>
+	</dict>
 	<key>ihash1</key>
 	<dict>
 		<key>link</key>
@@ -46,6 +55,24 @@
 		<string>@AudioBra4n</string>
 		<key>description</key>
 		<string>1337</string>
+	</dict>
+	<key>solarizedlight</key>
+	<dict>
+		<key>link</key>
+		<string>https://www.thetrevorproject.org/</string>
+		<key>author</key>
+		<string>@jason-conway</string>
+		<key>description</key>
+		<string>Solarized (Light)</string>
+	</dict>
+	<key>solarizeddark</key>
+	<dict>
+		<key>link</key>
+		<string>https://www.thetrevorproject.org/</string>
+		<key>author</key>
+		<string>@jason-conway</string>
+		<key>description</key>
+		<string>Solarized (Dark)</string>
 	</dict>
 	<key>pydann2</key>
 	<dict>

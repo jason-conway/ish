@@ -21,6 +21,12 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		0FAD435B28FCA5CB0098EBED /* solarizeddark.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FAD435928FCA5CB0098EBED /* solarizeddark.png */; };
+		0FAD435C28FCA5CB0098EBED /* solarizeddark.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FAD435928FCA5CB0098EBED /* solarizeddark.png */; };
+		0FAD435D28FCA5CB0098EBED /* solarizedlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FAD435A28FCA5CB0098EBED /* solarizedlight.png */; };
+		0FAD435E28FCA5CB0098EBED /* solarizedlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FAD435A28FCA5CB0098EBED /* solarizedlight.png */; };
+		0FAD436128FCB8DD0098EBED /* local.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FAD436028FCB8DD0098EBED /* local.png */; };
+		0FAD436228FCB8DD0098EBED /* local.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FAD436028FCB8DD0098EBED /* local.png */; };
 		491B31E62883BF22008EEFB0 /* ThemeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 491B31E52883BF22008EEFB0 /* ThemeViewController.m */; };
 		49302D8E277669D300C9885A /* ish.c in Sources */ = {isa = PBXBuildFile; fileRef = 49302D8D277669D300C9885A /* ish.c */; };
 		496C7AB227CC697E005D7613 /* Theme.m in Sources */ = {isa = PBXBuildFile; fileRef = 491C4C1E27C8FB65008B1DFA /* Theme.m */; };
@@ -397,6 +403,9 @@
 /* Begin PBXFileReference section */
 		0F412108289F3B6400D40AD5 /* atomic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = atomic.h; sourceTree = "<group>"; };
 		0F412109289F3B6400D40AD5 /* spinlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spinlock.h; sourceTree = "<group>"; };
+		0FAD435928FCA5CB0098EBED /* solarizeddark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = solarizeddark.png; sourceTree = "<group>"; };
+		0FAD435A28FCA5CB0098EBED /* solarizedlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = solarizedlight.png; sourceTree = "<group>"; };
+		0FAD436028FCB8DD0098EBED /* local.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = local.png; sourceTree = "<group>"; };
 		408A2639236440F8008A4E81 /* iOSFS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iOSFS.m; sourceTree = "<group>"; };
 		408A263B23644102008A4E81 /* iOSFS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iOSFS.h; sourceTree = "<group>"; };
 		491B31E42883BF22008EEFB0 /* ThemeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThemeViewController.h; sourceTree = "<group>"; };
@@ -884,6 +893,9 @@
 		BB1B9A4123A5E92A00414052 /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				0FAD436028FCB8DD0098EBED /* local.png */,
+				0FAD435928FCA5CB0098EBED /* solarizeddark.png */,
+				0FAD435A28FCA5CB0098EBED /* solarizedlight.png */,
 				BB0F552D239F8A790032A2A1 /* Icons.plist */,
 				BB4A923124EDA560002F5A96 /* 3d.png */,
 				BB38597627BCEC70000A1082 /* circular.png */,
@@ -1684,10 +1696,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0FAD435B28FCA5CB0098EBED /* solarizeddark.png in Resources */,
 				BB38599627BCEE6B000A1082 /* idollarhash.png in Resources */,
 				BB3859A227BCEE6B000A1082 /* dollarblock2.png in Resources */,
 				BB3859A727BCEE6B000A1082 /* uninspired.png in Resources */,
 				BB38599B27BCEE6B000A1082 /* rgb.png in Resources */,
+				0FAD436128FCB8DD0098EBED /* local.png in Resources */,
 				BB38599927BCEE6B000A1082 /* dollarblock1.png in Resources */,
 				BB38599C27BCEE6B000A1082 /* sprite64.png in Resources */,
 				BB792B5D1F96D90D00FFB7A4 /* Assets.xcassets in Resources */,
@@ -1703,6 +1717,7 @@
 				BB38599427BCEE6B000A1082 /* pydann1.png in Resources */,
 				BB0F552E239F8A790032A2A1 /* Icons.plist in Resources */,
 				BB38599527BCEE6B000A1082 /* pydann2.png in Resources */,
+				0FAD435D28FCA5CB0098EBED /* solarizedlight.png in Resources */,
 				BB2B4DAF231D998300CB578B /* term.html in Resources */,
 				BB3859A027BCEE6B000A1082 /* 3d.png in Resources */,
 				BB10E5D0248DC21D009C7A74 /* Roots.storyboard in Resources */,
@@ -1730,10 +1745,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0FAD435C28FCA5CB0098EBED /* solarizeddark.png in Resources */,
 				BBEF197D268066D1001225BD /* 3d.png in Resources */,
 				BBEF197E268066D1001225BD /* colontildehash.png in Resources */,
 				BBEF197F268066D1001225BD /* metal.png in Resources */,
 				BBEF1980268066D1001225BD /* Assets.xcassets in Resources */,
+				0FAD436228FCB8DD0098EBED /* local.png in Resources */,
 				BBEF1981268066D1001225BD /* LaunchScreen.storyboard in Resources */,
 				BB38597D27BCEC78000A1082 /* dollarblock1.png in Resources */,
 				BBEF1982268066D1001225BD /* Settings.bundle in Resources */,
@@ -1749,6 +1766,7 @@
 				BBEF198B268066D1001225BD /* term.html in Resources */,
 				BBEF198C268066D1001225BD /* notsurewhatthisis.png in Resources */,
 				BBEF198D268066D1001225BD /* reworked.png in Resources */,
+				0FAD435E28FCA5CB0098EBED /* solarizedlight.png in Resources */,
 				BBEF198E268066D1001225BD /* Roots.storyboard in Resources */,
 				BBEF198F268066D1001225BD /* idollarhash.png in Resources */,
 				BB3859A827BCEE6C000A1082 /* is.png in Resources */,
