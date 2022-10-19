@@ -162,6 +162,7 @@
             ldaxr\s w8, [_xaddr]
             stlxr\s w10, _tmp, [_xaddr]
             cbnz w10, 1b
+            dmb sy
             movs _tmp, w8
             write_done \size, \op\size\()_mem
             gret 1
@@ -287,6 +288,7 @@
         b.ne 3f
         stlxr\s w13, w8, [_xaddr]
         cbnz w13, 2b
+        dmb sy
         .ifc \op,xadd
             mov _tmp, w9
         .endif
