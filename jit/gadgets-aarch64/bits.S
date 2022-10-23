@@ -282,7 +282,6 @@
         cset w9, ne
         stlxr w10, w8, [_xaddr]
         cbnz w10, 1b
-        dmb sy
         strb w9, [_cpu, CPU_cf]
         write_done \size, atomic_\op\size\()_mem
         gret 1

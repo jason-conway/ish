@@ -71,7 +71,6 @@
         stlxr\s w10, w8, [_xaddr]
         cbnz w10, 2b
 
-        dmb sy
         write_done \size, atomic_cmpxchg\size\()_mem
         gret 1
         write_bullshit \size, atomic_cmpxchg\size\()_mem
@@ -110,7 +109,6 @@
     cset w11, eq
     stlxr w12, x8, [_xaddr]
     cbnz w12, 1b
-    dmb sy
     write_done 64, atomic_cmpxchg8b
     ubfx xax, x9, 0, 32
     ubfx xdx, x9, 32, 32
