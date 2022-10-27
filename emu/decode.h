@@ -186,7 +186,8 @@ restart:
                 case 0xad: TRACEI("shrd cl, reg, modrm");
                            READMODRM; SHRD(reg_c, modrm_reg, modrm_val,oz); break;
 
-                case 0xae: TRACEI("fence"); READMODRM; break;
+                case 0xae: TRACEI("fence");
+                           READMODRM; asm volatile("dmb ish" : : : "memory"); break;
 
                 case 0xaf: TRACEI("imul modrm, reg");
                            READMODRM; IMUL2(modrm_val, modrm_reg,oz); break;

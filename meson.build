@@ -28,6 +28,12 @@ endif
 
 add_project_arguments('-Wno-switch', language: 'c')
 
+#add_project_arguments('-fverbose-asm', language: 'c')
+#add_project_arguments('-fdebug-macro', language: 'c')
+#add_project_arguments('-g3', language: 'c')
+#add_project_arguments('-save-temps', language: 'c')
+#add_project_arguments('-fdwarf-directory-asm', language: 'c')
+add_project_arguments('-O3', language: 'c')
 includes = [include_directories('.')]
 
 threads = dependency('threads')
