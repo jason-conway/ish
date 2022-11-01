@@ -84,6 +84,12 @@ static inline void __use(int dummy __attribute__((unused)), ...) {}
 #define use(...) __use(0, ##__VA_ARGS__)
 
 #if defined(__x86_64__)
+    #define emu_barrier() asm volatile("mfence":::"memory")
+#elif defined(__arm64__) || defined(__aarch64__)
+    #define emu_barrier() asm volatile("dmb ish")
+#endif
+
+#if defined(__x86_64__)
 #define rdtsc() ({ \
         uint32_t low, high; \
         __asm__ volatile("rdtsc" : "=a" (high), "=d" (low)); \
