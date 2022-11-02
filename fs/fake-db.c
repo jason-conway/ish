@@ -162,7 +162,7 @@ static void sqlite_func_change_prefix(sqlite3_context *context, int argc, sqlite
     size_t out_size = in_size - start + replacement_size;
     char *out_blob = sqlite3_malloc(out_size);
     memcpy(out_blob, replacement, replacement_size);
-    memcpy(out_blob + replacement_size, in_blob + start, in_size - start);
+    memcpy(out_blob + replacement_size, (uint8_t *)in_blob + start, in_size - start);
     sqlite3_result_blob(context, out_blob, out_size, sqlite3_free);
 }
 

@@ -517,7 +517,7 @@ static int fakefs_write_end(struct file *file, struct address_space *mapping,
     unsigned from = pos & (PAGE_SIZE - 1);
 
     void *buffer = kmap(page);
-    ssize_t res = host_pwrite(INODE_FD(file->f_inode), buffer + from, copied, pos);
+    ssize_t res = host_pwrite(INODE_FD(file->f_inode), (uint8_t *)buffer + from, copied, pos);
     kunmap(page);
     if (res < 0)
         goto out;
