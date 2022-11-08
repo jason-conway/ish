@@ -86,7 +86,7 @@ static inline void __use(int dummy __attribute__((unused)), ...) {}
 #if defined(__x86_64__)
     #define emu_barrier() asm volatile("mfence":::"memory")
 #elif defined(__arm64__) || defined(__aarch64__)
-    #define emu_barrier() asm volatile("dmb ish")
+    #define emu_barrier() asm volatile("dmb ish":::"memory")
 #endif
 
 #if defined(__x86_64__)
