@@ -5,8 +5,9 @@
 
 void ish_printk(const char *msg, ...);
 void ish_vprintk(const char *msg, va_list args);
+#ifndef printk
 #define printk ish_printk
-
+#endif
 // debug output utilities
 // save me
 

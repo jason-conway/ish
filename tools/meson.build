@@ -25,9 +25,9 @@ hb_opt = 0
 libarchive = dependency('libarchive', required: false)
 if not libarchive.found()
     # homebrew
-    libarchive_lib = cc.find_library('libarchive', dirs: ['/usr/local/opt/libarchive/lib'], required: false)
+    libarchive_lib = cc.find_library('archive', dirs: ['/usr/local/opt/libarchive/lib'], required: false)
     if not libarchive_lib.found()
-        libarchive_lib = cc.find_library('libarchive', dirs: ['/opt/homebrew/opt/libarchive/lib'], required: false)
+        libarchive_lib = cc.find_library('archive', dirs: ['/opt/homebrew/opt/libarchive/lib'], required: false)
         hb_opt = 1
     endif
     if libarchive_lib.found()
