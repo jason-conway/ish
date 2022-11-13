@@ -113,6 +113,9 @@ bool mount_param_flag(const char *info, const char *flag);
 #define O_DIRECTORY_ (1 << 16)
 #define O_CLOEXEC_ (1 << 19)
 
+#define CLOSE_RANGE_UNSHARE (1 << 1)
+#define CLOSE_RANGE_CLOEXEC (1 << 2)
+
 // generic ioctls
 #define FIONREAD_ 0x541b
 #define FIONBIO_ 0x5421
