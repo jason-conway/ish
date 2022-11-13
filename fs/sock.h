@@ -27,6 +27,7 @@ int_t sys_getsockopt(fd_t sock_fd, dword_t level, dword_t option, addr_t value_a
 int_t sys_sendmsg(fd_t sock_fd, addr_t msghdr_addr, int_t flags);
 int_t sys_recvmsg(fd_t sock_fd, addr_t msghdr_addr, int_t flags);
 int_t sys_sendmmsg(fd_t sock_fd, addr_t msgvec_addr, uint_t msgvec_len, int_t flags);
+int_t sys_recvmmsg(fd_t sock_fd, addr_t msg_vec, dword_t vec_len, dword_t flags, addr_t timeout_addr);
 
 #define SOCKADDR_DATA_MAX 108
 
@@ -180,9 +181,11 @@ static inline int sock_flags_from_real(int real) {
 #define SO_KEEPALIVE_ 9
 #define SO_LINGER_ 13
 #define SO_PEERCRED_ 17
+#define SO_RCVTIMEO_ 20
 #define SO_TIMESTAMP_ 29
 #define SO_PROTOCOL_ 38
 #define SO_DOMAIN_ 39
+
 #define IP_TOS_ 1
 #define IP_TTL_ 2
 #define IP_HDRINCL_ 3
@@ -211,6 +214,7 @@ static inline int sock_opt_to_real(int fake, int level) {
             case SO_SNDBUF_: return SO_SNDBUF;
             case SO_RCVBUF_: return SO_RCVBUF;
             case SO_TIMESTAMP_: return SO_TIMESTAMP;
+            case SO_RCVTIMEO_: return SO_RCVTIMEO;
         } break;
         case IPPROTO_TCP: switch (fake) {
             case TCP_NODELAY_: return TCP_NODELAY;
