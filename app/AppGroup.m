@@ -31,7 +31,7 @@ struct cs_entitlements {
     uint32_t magic;
     uint32_t length;
     char entitlements[];
-};
+} __attribute__((packed));
 
 static NSDictionary *AppEntitlements() {
     static NSDictionary *entitlements;
