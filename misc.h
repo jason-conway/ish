@@ -62,7 +62,7 @@
 #if defined(__has_feature)
 #if has_feature(memory_sanitizer)
 #undef __no_instrument_msan
-#define __no_instrument_msan __attribute__((no_sanitize("memory"))
+#define __no_instrument_msan __attribute__((no_sanitize("memory")))
 #endif
 #endif
 #define __no_instrument __attribute__((no_sanitize("address", "thread", "undefined", "leak"))) __no_instrument_msan
