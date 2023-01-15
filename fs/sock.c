@@ -1099,43 +1099,6 @@ struct mmsghdr_ {
     uint_t len;
 };
 
-int_t sys_recvmmsg(fd_t sock_fd, addr_t msg_vec, dword_t vec_len, dword_t flags, addr_t timeout_addr) {
-    STRACE("recvmmsg(%d, %#x, %d, %#x)", sock_fd, msg_vec, flags, timeout_addr);
-    struct timespec timeout_ts = { };
-    if (timeout_addr) {
-        struct timeval_ timeout_timeval;
-        if (user_get(timeout_addr, timeout_timeval))
-            return _EFAULT;
-        timeout_ts.tv_sec = timeout_timeval.sec;
-        timeout_ts.tv_nsec = timeout_timeval.usec * 1000;
-        if (sys_setsockopt(sock_fd, SOL_SOCKET_, SO_RCVTIMEO_, (addr_t *)&timeout_ts, sizeof(struct timespec)) < 0)
-            return errno_map();
-    }
-
-    int num_recv = 0;
-    for (unsigned i = 0; i < vec_len; i++) {
-        addr_t msghdr = msg_vec + i * sizeof(struct mmsghdr_);
-
-        int_t res = sys_recvmsg(sock_fd, msghdr, flags);
-        if (res >= 0) {
-            addr_t msg_len_addr = msghdr + offsetof(struct mmsghdr_, len);
-            if (user_put(msg_len_addr, res))
-                res = _EFAULT;
-        }
-        if (res < 0) {
-            if (num_recv > 0)
-                break;
-            return res;
-        }
-        num_recv++;
-        // TODO: Check if flags contains MSG_WAITFORONE and set MSG_DONTWAIT if it does
-        if (res == 0) {
-            break;
-        }
-    }
-    return num_recv;
-}
-
 int_t sys_sendmmsg(fd_t sock_fd, addr_t msg_vec, uint_t vec_len, int_t flags) {
     int num_sent = 0;
     for (unsigned i = 0; i < vec_len; i++) {
@@ -1252,7 +1215,7 @@ static struct socket_call {
     {(syscall_t) sys_sendmsg, 3},
     {(syscall_t) sys_recvmsg, 3},
     {NULL}, // accept4
-    {(syscall_t) sys_recvmmsg, 5},
+    {NULL}, // sys_recvmmsg
     {(syscall_t) sys_sendmmsg, 4},
 };
 

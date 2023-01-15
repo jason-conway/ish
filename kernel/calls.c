@@ -223,7 +223,7 @@ syscall_t syscall_table[] = {
     [330] = (syscall_t) sys_dup3,
     [331] = (syscall_t) sys_pipe2,
     [332] = (syscall_t) syscall_stub, // inotify_init1
-    [337] = (syscall_t) sys_recvmmsg,
+    [337] = (syscall_t) syscall_stub,
     [338] = (syscall_t) syscall_stub, // fanotify_init
     [340] = (syscall_t) sys_prlimit64,
     [345] = (syscall_t) sys_sendmmsg,
@@ -250,7 +250,7 @@ syscall_t syscall_table[] = {
     [377] = (syscall_t) sys_copy_file_range,
     [383] = (syscall_t) syscall_silent_stub, // statx
     [384] = (syscall_t) sys_arch_prctl,
-    [436] = (syscall_t) sys_close_range,
+    [436] = (syscall_t) syscall_stub,
     [439] = (syscall_t) syscall_silent_stub, // faccessat2
 };
 

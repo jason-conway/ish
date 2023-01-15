@@ -218,28 +218,6 @@ dword_t sys_close(fd_t f) {
     return f_close(f);
 }
 
-int f_close_range(fd_t fd, fd_t maxfd, dword_t flags) {
-    if (flags & ~(CLOSE_RANGE_UNSHARE | CLOSE_RANGE_CLOEXEC) || fd > maxfd)
-        return -EINVAL;
-    if (flags & CLOSE_RANGE_UNSHARE) {
-        // In theory we'd unshare the specified file descriptors from other processes
-        // before closing
-    }
-    int error = 0;
-    // TODO: Ensure this is the right way to do this
-    for (fd_t f = fd; f < (fd_t)current->files->size; f++) {
-        if (flags & CLOSE_RANGE_CLOEXEC)
-            bit_set(f, current->files->cloexec);
-        else
-            error = f_close(f);
-    }
-    return error;
-}
-
-dword_t sys_close_range(fd_t fd, fd_t maxfd, dword_t flags) {
-    STRACE("close_range(%d, %d, %d)", fd, maxfd, flags);
-    return f_close_range(fd, maxfd, flags);
-}
 
 void fdtable_do_cloexec(struct fdtable *table) {
     lock(&table->lock);
