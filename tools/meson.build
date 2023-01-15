@@ -40,7 +40,10 @@ if not libarchive.found()
 endif
 
 if libarchive.found()
-    fakefsify = executable('fakefsify', ['fakefsify.c', 'fakefs.c'], dependencies: [libarchive], link_with: [libfakefs], include_directories: [includes])
+    fakefsify = executable('fakefsify', ['fakefsify.c', 'fakefs.c'], 
+        dependencies: [libarchive], link_with: [libfakefs], 
+        include_directories: [includes],
+        c_args: fflags, link_args: fflags)
     custom_target('unfakefsify',
         build_by_default: true,
         command: ['ln', '-sf', 'fakefsify', '@OUTPUT@'],

@@ -26,14 +26,36 @@ if get_option('no_crlf')
     add_project_arguments('-DNO_CRLF', language: 'c')
 endif
 
+fflags = []
+
+if get_option('profile_instr')
+    add_project_arguments('-fprofile-instr-generate', language: 'c')
+    fflags = ['-fprofile-instr-generate']
+endif
+
+if get_option('use_profile_instr')
+    add_project_arguments('-fprofile-instr-use=./../code.profdata', language: 'c')
+    add_project_arguments('-fdiagnostics-show-hotness', language: 'c')
+    add_project_arguments('-fsave-optimization-record', language: 'c')
+    fflags = ['-fprofile-instr-use=./../code.profdata', '-fdiagnostics-show-hotness', '-fsave-optimization-record']
+endif
+
+if get_option('coverage')
+    add_project_arguments('--coverage', language: 'c')
+    fflags = ['--coverage']
+endif
+
 add_project_arguments('-Wno-switch', language: 'c')
 
+#add_project_arguments('-g', language: 'c')
 #add_project_arguments('-fverbose-asm', language: 'c')
 #add_project_arguments('-fdebug-macro', language: 'c')
-#add_project_arguments('-g3', language: 'c')
+
 #add_project_arguments('-save-temps', language: 'c')
-#add_project_arguments('-fdwarf-directory-asm', language: 'c')
 add_project_arguments('-O3', language: 'c')
+#add_project_arguments('-fsanitize=memory', language: 'c')
+#add_project_arguments('-fno-optimize-sibling-calls', language: 'c')
+
 includes = [include_directories('.')]
 
 threads = dependency('threads')
@@ -77,12 +99,15 @@ else
     ]
 endif
 
-libish_emu = library('ish_emu', emu_src, include_directories: includes)
+libish_emu = library('ish_emu', emu_src,
+    include_directories: includes,
+    c_args: fflags, link_args: fflags)
 
 libfakefs = library('fakefs',
     ['fs/fake-db.c', 'fs/fake-migrate.c', 'fs/fake-rebuild.c'],
     include_directories: includes,
-    dependencies: sqlite3)
+    dependencies: sqlite3,
+    c_args: fflags, link_args: fflags)
 
 subdir('deps')
 
@@ -166,10 +191,13 @@ if get_option('kernel') == 'ish'
     ish = declare_dependency(
         link_with: [libish, libish_emu, libfakefs],
         dependencies: dependencies,
-        include_directories: includes)
+        include_directories: includes,
+        link_args: fflags)
+
 
     if not meson.is_cross_build()
-        executable('ish', ['main.c'], dependencies: ish)
+        executable('ish', ['main.c'], dependencies: ish,
+        c_args: fflags, link_args: fflags)
     endif
 
 elif get_option('kernel') == 'linux'
@@ -200,7 +228,7 @@ endforeach
 
 if not meson.is_cross_build()
     # test for floating point library
-    float80_test = executable('float80_test', ['emu/float80.c', 'emu/float80-test.c'], dependencies: [libm])
+    float80_test = executable('float80_test', ['emu/float80.c', 'emu/float80-test.c'], dependencies: [libm], c_args: fflags, link_args: fflags)
     test('float80', float80_test)
 endif
 
