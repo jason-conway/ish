@@ -28,6 +28,18 @@ endif
 
 fflags = []
 
+if get_option('fsan')
+    add_project_arguments('-fsanitize=memory', language: 'c')
+    add_project_arguments('-fno-optimize-sibling-calls', language: 'c')
+    add_project_arguments('-fno-omit-frame-pointer', language: 'c')
+    fflags = ['-fsanitize=memory']
+endif
+
+if get_option('safe_stack')
+    add_project_arguments('-fsanitize=safe-stack', language: 'c')
+    fflags = ['-fsanitize=safe-stack']
+endif
+
 if get_option('profile_instr')
     add_project_arguments('-fprofile-instr-generate', language: 'c')
     fflags = ['-fprofile-instr-generate']
@@ -46,15 +58,11 @@ if get_option('coverage')
 endif
 
 add_project_arguments('-Wno-switch', language: 'c')
-
-#add_project_arguments('-g', language: 'c')
+add_project_arguments('-g', language: 'c')
 #add_project_arguments('-fverbose-asm', language: 'c')
 #add_project_arguments('-fdebug-macro', language: 'c')
-
 #add_project_arguments('-save-temps', language: 'c')
 add_project_arguments('-O3', language: 'c')
-#add_project_arguments('-fsanitize=memory', language: 'c')
-#add_project_arguments('-fno-optimize-sibling-calls', language: 'c')
 
 includes = [include_directories('.')]
 
