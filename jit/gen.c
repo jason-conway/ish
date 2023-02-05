@@ -22,7 +22,7 @@ static void gen(struct gen_state *state, unsigned long thing) {
         state->capacity *= 2;
         struct jit_block *bigger_block = realloc(state->block,
                 sizeof(struct jit_block) + state->capacity * sizeof(unsigned long));
-        if (bigger_block == NULL) {
+        if (unlikely(bigger_block == NULL)) {
             die("out of memory while jitting");
         }
         state->block = bigger_block;
@@ -202,7 +202,7 @@ static inline bool gen_op(struct gen_state *state, gadget_t *gadgets, enum arg a
         UNDEFINED;
     }
     if (arg == arg_mem || arg == arg_addr) {
-        if (!gen_addr(state, modrm, seg_gs))
+        if (unlikely(!gen_addr(state, modrm, seg_gs)))
             return false;
     }
     GEN(gadgets[arg]);
