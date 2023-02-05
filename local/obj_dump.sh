@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Syntax workaround for llvm-objdump in Hotspot
+
 if [[ "${TRACE-0}" == "1" ]]; then
     set -o xtrace
 fi
@@ -17,9 +19,5 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
-
-if [[ $START == $STOP ]]; then
-  $STOP = $START + 1
-fi
 
 llvm-objdump -d -l -C --start-address=$START --stop-address=$STOP /home/jasonconway/git/ish/build/ish

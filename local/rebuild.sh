@@ -9,11 +9,7 @@ if [[ "${TRACE-0}" == "1" ]]; then
 fi
 
 if [[ "${1-}" =~ ^-*h(elp)?$ ]]; then
-    echo 'Usage: ./rebuild.sh
-
-Rebuild iSH CLI
-
-'
+    echo 'Usage: ./rebuild.sh'
     exit
 fi
 
@@ -21,9 +17,8 @@ cd "$(dirname "$0")"
 
 main() {
     cd ..
-    CC=clang LD=lld meson setup --wipe build
-    cd build
-    ninja
+    CC=clang LD=lld meson setup --wipe --debug -Dengine=jit -Dkernel=linux build
+    ninja -C build
 }
 
 main "$@"
