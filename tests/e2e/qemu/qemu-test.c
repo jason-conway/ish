@@ -2505,7 +2505,7 @@ void test_sse(void)
     SSE_OP2(punpcklwd);
     SSE_OP2(punpckldq);
     SSE_OP2(packsswb);
-    SSE_OP2(pcmpgtb);
+    MMX_OP2(pcmpgtb);
     SSE_OP2(pcmpgtw);
     SSE_OP2(pcmpgtd);
     SSE_OP2(packuswb);
@@ -2513,8 +2513,8 @@ void test_sse(void)
     SSE_OP2(punpckhwd);
     SSE_OP2(punpckhdq);
     SSE_OP2(packssdw);
-    SSE_OP2(pcmpeqb);
-    SSE_OP2(pcmpeqw);
+    MMX_OP2(pcmpeqb);
+    MMX_OP2(pcmpeqw);
     SSE_OP2(pcmpeqd);
 
     MMX_OP2(paddq);
@@ -2534,7 +2534,7 @@ void test_sse(void)
     SSE_OP2(psubsb);
     SSE_OP2(psubsw);
     SSE_OP2(pminsw);
-    SSE_OP2(por);
+    MMX_OP2(por);
     SSE_OP2(paddsb);
     SSE_OP2(paddsw);
     SSE_OP2(pmaxsw);
@@ -2546,17 +2546,25 @@ void test_sse(void)
     SSE_OP2(psubw);
     SSE_OP2(psubd);
     SSE_OP2(psubq);
-    SSE_OP2(paddb);
+    MMX_OP2(paddb);
     SSE_OP2(paddw);
     SSE_OP2(paddd);
 
     SSE_OP2(pavgb);
     SSE_OP2(pavgw);
 
-    // asm volatile ("pinsrw $1, %1, %0" : "=y" (r.q[0]) : "r" (0x12345678));
-    // printf("%-9s: r=" FMT64X "\n", "pinsrw", r.q[0]);
+    asm volatile ("pinsrw $1, %1, %0" : "=y" (r.q[0]) : "r" (0x12345678));
+    printf("%-9s: r=" FMT64X "\n", "pinsrw", r.q[0]);
 
-    // asm volatile ("pinsrw $5, %1, %0" : "=x" (r.dq) : "r" (0x12345678));
+    asm volatile ("pinsrw $5, %1, %0" : "=x" (r.dq) : "r" (0x12345678));
+    printf("%-9s: r=" FMT64X "" FMT64X "\n", "pinsrw", r.q[1], r.q[0]);
+
+    // a.q[0] = 0xcafe;
+    // memcpy(&r.dq, &(int64_t[]){ 0xcafecafecafecafe, 0xcafecafecafecafe }, sizeof(r.dq));
+    // asm volatile ("pinsrw $1, %1, %0" : "=y" (r.q[0]) : "m" (a.q[0]));
+    // printf("%-9s: r=" FMT64X "\n", "pinsrw", r.q[0]);
+    // memcpy(&r.dq, &(int64_t[]){ 0xcafecafecafecafe, 0xcafecafecafe0000 }, sizeof(r.dq));
+    // asm volatile ("pinsrw $0, %1, %0" : "=x" (r.dq) : "r" (0xcafe));
     // printf("%-9s: r=" FMT64X "" FMT64X "\n", "pinsrw", r.q[1], r.q[0]);
 
     a.q[0] = test_values[0][0];
@@ -2567,8 +2575,8 @@ void test_sse(void)
     asm volatile ("pextrw $5, %1, %0" : "=r" (r.l[0]) : "x" (a.dq));
     printf("%-9s: r=%08x\n", "pextrw", r.l[0]);
 
-    // asm volatile ("pmovmskb %1, %0" : "=r" (r.l[0]) : "y" (a.q[0]));
-    // printf("%-9s: r=%08x\n", "pmovmskb", r.l[0]);
+    asm volatile ("pmovmskb %1, %0" : "=r" (r.l[0]) : "y" (a.q[0]));
+    printf("%-9s: r=%08x\n", "pmovmskb", r.l[0]);
 
     asm volatile ("pmovmskb %1, %0" : "=r" (r.l[0]) : "x" (a.dq));
     printf("%-9s: r=%08x\n", "pmovmskb", r.l[0]);
@@ -2617,8 +2625,8 @@ void test_sse(void)
     SSE_OP2(unpckhps);
     SSE_OP2(unpckhpd);
 
-    // SHUF_OP(shufps, 0x78);
-    // SHUF_OP(shufpd, 0x02);
+    SHUF_OP(shufps, 0x78);
+    SHUF_OP(shufpd, 0x02);
 
     PSHUF_OP(pshufd, 0x78);
     PSHUF_OP(pshuflw, 0x78);
