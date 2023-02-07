@@ -10,6 +10,7 @@
 
 #include "emu/vec.h"
 #include "emu/cpu.h"
+
 union vec {
     uint64_t qw;
     uint8_t u8[8];
