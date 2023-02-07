@@ -2306,6 +2306,22 @@ static uint64_t __attribute__((aligned(16))) test_values[4][2] = {
     }\
 }
 
+#define SHIFT_OP_MM(op,ib)\
+{\
+    int i;\
+    for(i=0;i<2;i++) {\
+    a.q[0] = test_values[2*i][0];\
+    b.q[0] = ib;\
+    a.q[1] = b.q[1] = 0;\
+    asm volatile (#op " %2, %0" : "=y" (r.q[0]) : "0" (a.q[0]), "y" (b.q[0]));\
+    printf("%-9s: a=" FMT64X " b=" FMT64X " r=" FMT64X "\n",\
+           #op,\
+           a.q[0],\
+           b.q[0],\
+           r.q[0]);\
+    }\
+}
+
 #define SHIFT_OP(op, ib)\
 {\
     int i;\
@@ -2506,8 +2522,8 @@ void test_sse(void)
     SSE_OP2(punpckldq);
     SSE_OP2(packsswb);
     MMX_OP2(pcmpgtb);
-    SSE_OP2(pcmpgtw);
-    SSE_OP2(pcmpgtd);
+    MMX_OP2(pcmpgtw);
+    MMX_OP2(pcmpgtd);
     SSE_OP2(packuswb);
     SSE_OP2(punpckhbw);
     SSE_OP2(punpckhwd);
@@ -2515,7 +2531,7 @@ void test_sse(void)
     SSE_OP2(packssdw);
     MMX_OP2(pcmpeqb);
     MMX_OP2(pcmpeqw);
-    SSE_OP2(pcmpeqd);
+    MMX_OP2(pcmpeqd);
 
     MMX_OP2(paddq);
     MMX_OP2(pmullw);
@@ -2542,30 +2558,28 @@ void test_sse(void)
     MMX_OP2(pmuludq);
     SSE_OP2(pmaddwd);
     SSE_OP2(psadbw);
-    SSE_OP2(psubb);
-    SSE_OP2(psubw);
-    SSE_OP2(psubd);
-    SSE_OP2(psubq);
+    MMX_OP2(psubb);
+    MMX_OP2(psubw);
+    MMX_OP2(psubd);
+    MMX_OP2(psubq);
     MMX_OP2(paddb);
-    SSE_OP2(paddw);
-    SSE_OP2(paddd);
+    MMX_OP2(paddw);
+    MMX_OP2(paddd);
 
     SSE_OP2(pavgb);
     SSE_OP2(pavgw);
 
+    a.q[0] = test_values[0][0];
+    asm volatile ("pinsrw $1, %1, %0" : "=y" (r.q[0]) : "m" (a.l[0]));
+    printf("%-9s: r=" FMT64X "\n", "pinsrw", r.q[0]);
     asm volatile ("pinsrw $1, %1, %0" : "=y" (r.q[0]) : "r" (0x12345678));
     printf("%-9s: r=" FMT64X "\n", "pinsrw", r.q[0]);
 
+    a.q[0] = test_values[0][0];
+    asm volatile ("pinsrw $5, %1, %0" : "=x" (r.dq) : "m" (a.l[0]));
+    printf("%-9s: r=" FMT64X "" FMT64X "\n", "pinsrw", r.q[1], r.q[0]);
     asm volatile ("pinsrw $5, %1, %0" : "=x" (r.dq) : "r" (0x12345678));
     printf("%-9s: r=" FMT64X "" FMT64X "\n", "pinsrw", r.q[1], r.q[0]);
-
-    // a.q[0] = 0xcafe;
-    // memcpy(&r.dq, &(int64_t[]){ 0xcafecafecafecafe, 0xcafecafecafecafe }, sizeof(r.dq));
-    // asm volatile ("pinsrw $1, %1, %0" : "=y" (r.q[0]) : "m" (a.q[0]));
-    // printf("%-9s: r=" FMT64X "\n", "pinsrw", r.q[0]);
-    // memcpy(&r.dq, &(int64_t[]){ 0xcafecafecafecafe, 0xcafecafecafe0000 }, sizeof(r.dq));
-    // asm volatile ("pinsrw $0, %1, %0" : "=x" (r.dq) : "r" (0xcafe));
-    // printf("%-9s: r=" FMT64X "" FMT64X "\n", "pinsrw", r.q[1], r.q[0]);
 
     a.q[0] = test_values[0][0];
     a.q[1] = test_values[0][1];
@@ -2659,6 +2673,21 @@ void test_sse(void)
     SHIFT_IM(psrlq, 7);
     SHIFT_IM(psllq, 16);
     SHIFT_IM(psllq, 7);
+
+    SHIFT_OP_MM(psllw, 16);
+    SHIFT_OP_MM(psllw, 7);
+    SHIFT_OP_MM(psrlw, 16);
+    SHIFT_OP_MM(psrlw, 7);
+
+    SHIFT_OP_MM(pslld, 32);
+    SHIFT_OP_MM(pslld, 7);
+    SHIFT_OP_MM(psrld, 32);
+    SHIFT_OP_MM(psrld, 7);
+
+    SHIFT_OP_MM(psllq, 32);
+    SHIFT_OP_MM(psllq, 7);
+    SHIFT_OP_MM(psrlq, 32);
+    SHIFT_OP_MM(psrlq, 7);
 
     // MOVMSK(movmskps);
     MOVMSK(movmskpd);
