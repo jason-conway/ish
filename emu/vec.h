@@ -21,7 +21,6 @@ void vec_merge128(NO_CPU, const void *src, void *dst);
 void vec_shiftl_w64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
 void vec_shiftl_d64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
 void vec_shiftl_q64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
-
 void vec_shiftr_w64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
 void vec_shiftr_d64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
 void vec_shiftr_q64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
@@ -45,23 +44,31 @@ void vec_imm_shiftr_dq128(NO_CPU, uint8_t amount, union xmm_reg *dst);
 void vec_imm_shiftrs_w128(NO_CPU, const uint8_t amount, union xmm_reg *dst);
 void vec_imm_shiftrs_d128(NO_CPU, const uint8_t amount, union xmm_reg *dst);
 
+void vec_add_b64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
+void vec_add_w64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
+void vec_add_d64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
+void vec_add_q64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
+
+void vec_sub_b64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
+void vec_sub_w64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
+void vec_sub_d64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
+void vec_sub_q64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
 
 void vec_add_b128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_add_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_add_d128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_add_q128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 
-void vec_add_b64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
-void vec_add_q64(NO_CPU, union mm_reg *src, union mm_reg *dst);
-
 void vec_addus_b128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_addus_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_addss_b128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_addss_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
+
 void vec_sub_b128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_sub_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_sub_d128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_sub_q128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
+
 void vec_subus_b128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_subus_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_subss_b128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
@@ -84,14 +91,13 @@ void vec_mul_p64(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_mul_p32(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 
 void vec_and128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
-void vec_and64(NO_CPU, union mm_reg *src, union mm_reg *dst);
 void vec_andn128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
-
 void vec_or128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
-void vec_or64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
-
 void vec_xor128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
-void vec_xor64(NO_CPU, union mm_reg *src, union mm_reg *dst);
+
+void vec_or_q64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
+void vec_and_q64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
+void vec_xor_q64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
 
 void vec_min_ub128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
 void vec_mins_w128(NO_CPU, union xmm_reg *src, union xmm_reg *dst);
@@ -159,8 +165,10 @@ void vec_shuffle_pd128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst, uin
 
 void vec_compare_eqb64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
 void vec_compare_eqw64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
-
+void vec_compare_eqd64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
 void vec_compares_gtb64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
+void vec_compares_gtw64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
+void vec_compares_gtd64(NO_CPU, const union mm_reg *src, union mm_reg *dst);
 
 void vec_compare_eqb128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);
 void vec_compare_eqw128(NO_CPU, const union xmm_reg *src, union xmm_reg *dst);

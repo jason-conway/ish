@@ -175,7 +175,6 @@ void vec_imm_shiftrs_d128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
     }
 }
 
-
 void vec_add_b128(NO_CPU, union xmm_reg *src, union xmm_reg *dst) {
     for (unsigned i = 0; i < array_size(src->u8); i++)
         dst->u8[i] += src->u8[i];

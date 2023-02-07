@@ -10,28 +10,56 @@
 
 #include "emu/vec.h"
 #include "emu/cpu.h"
-
-union vec { 
+union vec {
     uint64_t qw;
     uint8_t u8[8];
     uint16_t u16[4];
+    uint32_t u32[2];
+    uint64_t u64[1];
 };
 
-void vec_and64(NO_CPU, union mm_reg *src, union mm_reg *dst) {
-    dst->qw &= src->qw;
-}
-void vec_or64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
-    dst->qw |= src->qw;
-}
-void vec_xor64(NO_CPU, union mm_reg *src, union mm_reg *dst) {
-    dst->qw ^= src->qw;
-}
-void vec_add_q64(NO_CPU, union mm_reg *src, union mm_reg *dst) {
-    dst->qw += src->qw;
-}
-void vec_unpackl_dq64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
-    dst->dw[1] = src->dw[0];
-}
+#define VEC_MMX_OP(name, suffix, op, size) \
+    void vec_##name##_##suffix##64(NO_CPU, const union mm_reg *src, union mm_reg *dst) { \
+        union vec s = { .qw = src->qw}, d = { .qw = dst->qw }; \
+        for (unsigned i = 0; i < array_size(s.u##size); i++) \
+            d.u##size[i] op##= s.u##size[i]; \
+        dst->qw = d.qw; \
+    }
+
+#define _VEC_MMX_CMP(sgn, usgn, suffix, relop, size) \
+    void vec_compare##sgn##_##suffix##64(NO_CPU, const union mm_reg *src, union mm_reg *dst) { \
+        union vec s = { .qw = src->qw}, d = { .qw = dst->qw }; \
+        for (unsigned i = 0; i < array_size(s.u##size); i++) \
+            d.u##size[i] = (usgn##int##size##_t)d.u##size[i] relop (usgn##int##size##_t)s.u##size[i] ? ~0 : 0;\
+        dst->qw = d.qw; \
+    }
+
+#define VEC_MMX_CMPD(suffix, relop, size) \
+    _VEC_MMX_CMP(, u, suffix, relop, size)
+#define VEC_MMX_CMPS(suffix, relop, size) \
+    _VEC_MMX_CMP(s,, suffix, relop, size)
+
+VEC_MMX_OP(add, b, +, 8)
+VEC_MMX_OP(add, w, +, 16)
+VEC_MMX_OP(add, d, +, 32)
+VEC_MMX_OP(add, q, +, 64)
+
+VEC_MMX_OP(sub, b, -, 8)
+VEC_MMX_OP(sub, w, -, 16)
+VEC_MMX_OP(sub, d, -, 32)
+VEC_MMX_OP(sub, q, -, 64)
+
+VEC_MMX_OP(and, q, &, 64)
+VEC_MMX_OP(or,  q, |, 64)
+VEC_MMX_OP(xor, q, ^, 64)
+
+VEC_MMX_CMPD(eqb, ==,  8)
+VEC_MMX_CMPD(eqw, ==, 16)
+VEC_MMX_CMPD(eqd, ==, 32)
+
+VEC_MMX_CMPS(gtb, >,  8)
+VEC_MMX_CMPS(gtw, >, 16)
+VEC_MMX_CMPS(gtd, >, 32)
 
 void vec_shiftl_w64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
     if (src->qw > 15) {
@@ -96,40 +124,6 @@ void vec_imm_shiftr_q64(NO_CPU, const uint8_t amount, union mm_reg *dst) {
         dst->qw >>= amount;
 }
 
-void vec_shuffle_w64(NO_CPU, const union mm_reg *src, union mm_reg *dst, uint8_t encoding) {
-    union vec s = { .qw = src->qw}, d = { .qw = dst->qw };
-    for (unsigned i = 0; i < 4; i++)
-        d.u16[i] = s.u16[(encoding >> (2 * i)) % 4];
-    dst->qw = d.qw;
-}
-
-void vec_compares_gtb64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
-    union vec s = { .qw = src->qw}, d = { .qw = dst->qw };
-    for (unsigned i = 0; i < array_size(s.u8); i++)
-        d.u8[i] = (int8_t)d.u8[i] > (int8_t)s.u8[i] ? ~0 : 0;
-    dst->qw = d.qw;
-}
-void vec_compare_eqb64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
-    union vec s = { .qw = src->qw}, d = { .qw = dst->qw };
-    for (unsigned i = 0; i < array_size(s.u8); i++)
-        d.u8[i] = d.u8[i] == s.u8[i] ? ~0 : 0;
-    dst->qw = d.qw;
-}
-
-void vec_compare_eqw64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
-    union vec s = { .qw = src->qw}, d = { .qw = dst->qw };
-    for (unsigned i = 0; i < array_size(s.u16); i++)
-        d.u16[i] = d.u16[i] == s.u16[i] ? ~0 : 0;
-    dst->qw = d.qw;
-}
-
-void vec_add_b64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
-    union vec s = { .qw = src->qw}, d = { .qw = dst->qw };
-    for (unsigned i = 0; i < array_size(s.u8); i++)
-        d.u8[i] += s.u8[i];
-    dst->qw = d.qw;
-}
-
 void vec_mulu64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
     union vec s = { .qw = src->qw}, d = { .qw = dst->qw };
     for (unsigned i = 0; i < 4; i++) {
@@ -147,6 +141,17 @@ void vec_mull64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
 }
 void vec_mulu_dq64(NO_CPU, union mm_reg *src, union mm_reg *dst) {
     dst->qw = (uint64_t) src->dw[0] * dst->dw[0];
+}
+
+void vec_unpackl_dq64(NO_CPU, const union mm_reg *src, union mm_reg *dst) {
+    dst->dw[1] = src->dw[0];
+}
+
+void vec_shuffle_w64(NO_CPU, const union mm_reg *src, union mm_reg *dst, uint8_t encoding) {
+    union vec s = { .qw = src->qw}, d = { .qw = dst->qw };
+    for (unsigned i = 0; i < 4; i++)
+        d.u16[i] = s.u16[(encoding >> (2 * i)) % 4];
+    dst->qw = d.qw;
 }
 
 void vec_movmask_b64(NO_CPU, const union mm_reg *src, uint32_t *dst) {
