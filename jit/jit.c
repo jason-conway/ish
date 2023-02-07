@@ -92,7 +92,7 @@ static void jit_insert(struct jit *jit, struct jit_block *block) {
     jit->mem_used += block->used;
     jit->num_blocks++;
     // target an average hash chain length of 1-2
-    if (jit->num_blocks >= jit->hash_size * 2)
+    if (unlikely(jit->num_blocks >= jit->hash_size * 2))
         jit_resize_hash(jit, jit->hash_size * 2);
 
     list_init_add(&jit->hash[block->addr % jit->hash_size], &block->chain);
@@ -125,7 +125,7 @@ static struct jit_block *jit_block_compile(addr_t ip, struct tlb *tlb) {
         // guarantee that by stopping as soon as there's less space left than
         // the maximum length of an x86 instruction
         // TODO refuse to decode instructions longer than 15 bytes
-        if (state.ip - ip >= PAGE_SIZE - 15) {
+        if (unlikely(state.ip - ip >= PAGE_SIZE - 15)) {
             gen_exit(&state);
             break;
         }

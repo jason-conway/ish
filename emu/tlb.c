@@ -22,10 +22,10 @@ void tlb_free(struct tlb *tlb) {
 
 bool __tlb_read_cross_page(struct tlb *tlb, addr_t addr, char *value, unsigned size) {
     char *ptr1 = __tlb_read_ptr(tlb, addr);
-    if (ptr1 == NULL)
+    if (unlikely(ptr1 == NULL))
         return false;
     char *ptr2 = __tlb_read_ptr(tlb, (PAGE(addr) + 1) << PAGE_BITS);
-    if (ptr2 == NULL)
+    if (unlikely(ptr2 == NULL))
         return false;
     size_t part1 = PAGE_SIZE - PGOFFSET(addr);
     assert(part1 < size);
@@ -36,10 +36,10 @@ bool __tlb_read_cross_page(struct tlb *tlb, addr_t addr, char *value, unsigned s
 
 bool __tlb_write_cross_page(struct tlb *tlb, addr_t addr, const char *value, unsigned size) {
     char *ptr1 = __tlb_write_ptr(tlb, addr);
-    if (ptr1 == NULL)
+    if (unlikely(ptr1 == NULL))
         return false;
     char *ptr2 = __tlb_write_ptr(tlb, (PAGE(addr) + 1) << PAGE_BITS);
-    if (ptr2 == NULL)
+    if (unlikely(ptr2 == NULL))
         return false;
     size_t part1 = PAGE_SIZE - PGOFFSET(addr);
     assert(part1 < size);
@@ -50,7 +50,7 @@ bool __tlb_write_cross_page(struct tlb *tlb, addr_t addr, const char *value, uns
 
 __no_instrument void *tlb_handle_miss(struct tlb *tlb, addr_t addr, int type) {
     char *ptr = mmu_translate(tlb->mmu, TLB_PAGE(addr), type);
-    if (tlb->mmu->changes != tlb->mem_changes)
+    if (unlikely(tlb->mmu->changes != tlb->mem_changes))
         tlb_flush(tlb);
     if (ptr == NULL) {
         tlb->segfault_addr = addr;

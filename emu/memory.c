@@ -76,7 +76,7 @@ static void mem_pt_del(struct mem *mem, page_t page) {
 
 void mem_next_page(struct mem *mem, page_t *page) {
     (*page)++;
-    if (*page >= MEM_PAGES)
+    if (unlikely(*page >= MEM_PAGES))
         return;
     while (*page < MEM_PAGES && mem->pgdir[PGDIR_TOP(*page)] == NULL)
         *page = (*page - PGDIR_BOTTOM(*page)) + MEM_PGDIR_SIZE;
@@ -108,14 +108,14 @@ bool pt_is_hole(struct mem *mem, page_t start, pages_t pages) {
 }
 
 int pt_map(struct mem *mem, page_t start, pages_t pages, void *memory, size_t offset, unsigned flags) {
-    if (memory == MAP_FAILED)
+    if (unlikely(memory == MAP_FAILED))
         return errno_map();
 
     // If this fails, the munmap in pt_unmap would probably fail.
     assert((uintptr_t) memory % real_page_size == 0 || memory == vdso_data);
 
     struct data *data = malloc(sizeof(struct data));
-    if (data == NULL)
+    if (unlikely(data == NULL))
         return _ENOMEM;
     *data = (struct data) {
         .data = memory,
@@ -141,7 +141,7 @@ int pt_map(struct mem *mem, page_t start, pages_t pages, void *memory, size_t of
 
 int pt_unmap(struct mem *mem, page_t start, pages_t pages) {
     for (page_t page = start; page < start + pages; page++)
-        if (mem_pt(mem, page) == NULL)
+        if (unlikely(mem_pt(mem, page) == NULL))
             return -1;
     return pt_unmap_always(mem, start, pages);
 }
@@ -182,7 +182,7 @@ int pt_map_nothing(struct mem *mem, page_t start, pages_t pages, unsigned flags)
 
 int pt_set_flags(struct mem *mem, page_t start, pages_t pages, int flags) {
     for (page_t page = start; page < start + pages; page++)
-        if (mem_pt(mem, page) == NULL)
+        if (unlikely(mem_pt(mem, page) == NULL))
             return _ENOMEM;
     for (page_t page = start; page < start + pages; page++) {
         struct pt_entry *entry = mem_pt(mem, page);
@@ -208,7 +208,7 @@ int pt_copy_on_write(struct mem *src, struct mem *dst, page_t start, page_t page
         struct pt_entry *entry = mem_pt(src, page);
         if (entry == NULL)
             continue;
-        if (pt_unmap_always(dst, page, 1) < 0)
+        if (unlikely(pt_unmap_always(dst, page, 1) < 0))
             return -1;
         if (!(entry->flags & P_SHARED))
             entry->flags |= P_COW;
@@ -231,7 +231,7 @@ static void mem_changed(struct mem *mem) {
 // Used by the emulator to avoid deadlocks.
 static void *mem_ptr_nofault(struct mem *mem, addr_t addr, int type) {
     struct pt_entry *entry = mem_pt(mem, PAGE(addr));
-    if (entry == NULL)
+    if (unlikely(entry == NULL))
         return NULL;
     if (type == MEM_WRITE && !P_WRITABLE(entry->flags))
         return NULL;
@@ -244,7 +244,7 @@ void *mem_ptr(struct mem *mem, addr_t addr, int type) {
     page_t page = PAGE(addr);
     struct pt_entry *entry = mem_pt(mem, page);
 
-    if (entry == NULL) {
+    if (unlikely(entry == NULL)) {
         // page does not exist
         // look to see if the next VM region is willing to grow down
         page_t p = page + 1;
