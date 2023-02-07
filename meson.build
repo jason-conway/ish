@@ -35,6 +35,13 @@ if get_option('fsan')
     fflags = ['-fsanitize=memory']
 endif
 
+if get_option('asan')
+    add_project_arguments('-fsanitize=address', language: 'c')
+    add_project_arguments('-fno-optimize-sibling-calls', language: 'c')
+    add_project_arguments('-fno-omit-frame-pointer', language: 'c')
+    fflags = ['-fsanitize=address']
+endif
+
 if get_option('safe_stack')
     add_project_arguments('-fsanitize=safe-stack', language: 'c')
     fflags = ['-fsanitize=safe-stack']
@@ -58,11 +65,10 @@ if get_option('coverage')
 endif
 
 add_project_arguments('-Wno-switch', language: 'c')
-add_project_arguments('-g', language: 'c')
-#add_project_arguments('-fverbose-asm', language: 'c')
-#add_project_arguments('-fdebug-macro', language: 'c')
-#add_project_arguments('-save-temps', language: 'c')
-add_project_arguments('-O3', language: 'c')
+# add_project_arguments('-g3', language: 'c')
+# add_project_arguments('-fverbose-asm', language: 'c')
+# add_project_arguments('-fdebug-macro', language: 'c')
+# add_project_arguments('-save-temps', language: 'c')
 
 includes = [include_directories('.')]
 
@@ -83,6 +89,7 @@ emu_src = [
     'emu/tlb.c',
     'emu/fpu.c',
     'emu/vec.c',
+    'emu/mmx.c',
     'emu/float80.c',
 
 ]
