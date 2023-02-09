@@ -29,8 +29,8 @@ __no_instrument DECODER_RET glue(DECODER_NAME, OP_SIZE)(DECODER_ARGS) {
 #define READIMMoz READIMM // there's nothing more permanent than a temporary hack
 #define READIMM8 READIMM_(imm, 8); imm = (int8_t) (uint8_t) imm
 #define READIMM16 READIMM_(imm, 16)
-#define READMODRM_MEM READMODRM; if (modrm.type == modrm_reg) UNDEFINED
-#define READMODRM_NOMEM READMODRM; if (modrm.type != modrm_reg) UNDEFINED
+#define READMODRM_MEM READMODRM; if (unlikely(modrm.type == modrm_reg)) UNDEFINED
+#define READMODRM_NOMEM READMODRM; if (unlikely(modrm.type != modrm_reg)) UNDEFINED
 
 restart:
     TRACEIP();

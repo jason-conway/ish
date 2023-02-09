@@ -41,7 +41,7 @@ static const unsigned rm_disp32 = reg_ebp;
 static inline bool modrm_decode32(addr_t *ip, struct tlb *tlb, struct modrm *modrm) {
 #define READ(thing) \
     *ip += sizeof(thing); \
-    if (!tlb_read(tlb, *ip - sizeof(thing), &(thing), sizeof(thing))) \
+    if (unlikely(!tlb_read(tlb, *ip - sizeof(thing), &(thing), sizeof(thing)))) \
         return false
 
     byte_t modrm_byte;

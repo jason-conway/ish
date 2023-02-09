@@ -272,9 +272,9 @@ void *mem_ptr(struct mem *mem, addr_t addr, int type) {
 
     if (entry != NULL && (type == MEM_WRITE || type == MEM_WRITE_PTRACE)) {
         // if page is unwritable, well tough luck
-        if (type != MEM_WRITE_PTRACE && !(entry->flags & P_WRITE))
+        if (unlikely(type != MEM_WRITE_PTRACE && !(entry->flags & P_WRITE)))
             return NULL;
-        if (type == MEM_WRITE_PTRACE) {
+        if (unlikely(type == MEM_WRITE_PTRACE)) {
             // TODO: Is P_WRITE really correct? The page shouldn't be writable without ptrace.
             entry->flags |= P_WRITE | P_COW;
         }

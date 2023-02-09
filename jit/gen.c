@@ -90,10 +90,10 @@ void gen_exit(struct gen_state *state) {
 #define RESTORE_IP state->ip = state->orig_ip
 #define _READIMM(name, size) do {\
     state->ip += size/8; \
-    if (!tlb_read(tlb, state->ip - size/8, &name, size/8)) SEGFAULT; \
+    if (unlikely(!tlb_read(tlb, state->ip - size/8, &name, size/8))) SEGFAULT; \
 } while (0)
 
-#define READMODRM if (!modrm_decode32(&state->ip, tlb, &modrm)) SEGFAULT
+#define READMODRM if (unlikely(!modrm_decode32(&state->ip, tlb, &modrm))) SEGFAULT
 #define READADDR _READIMM(addr_offset, 32)
 #define SEG_GS() seg_gs = true
 
@@ -136,7 +136,7 @@ typedef void (*gadget_t)(void);
 #define gggg(_g, a, b, c) do { g(_g); GEN(a); GEN(b); GEN(c); } while (0)
 #define ggggg(_g, a, b, c, d) do { g(_g); GEN(a); GEN(b); GEN(c); GEN(d); } while (0)
 #define gggggg(_g, a, b, c, d, e) do { g(_g); GEN(a); GEN(b); GEN(c); GEN(d); GEN(e); } while (0)
-#define ga(g, i) do { extern gadget_t g##_gadgets[]; if (g##_gadgets[i] == NULL) UNDEFINED; GEN(g##_gadgets[i]); } while (0)
+#define ga(g, i) do { extern gadget_t g##_gadgets[]; if (unlikely(g##_gadgets[i] == NULL)) UNDEFINED; GEN(g##_gadgets[i]); } while (0)
 #define gag(g, i, a) do { ga(g, i); GEN(a); } while (0)
 #define gagg(g, i, a, b) do { ga(g, i); GEN(a); GEN(b); } while (0)
 #define gz(g, z) ga(g, sz(z))
@@ -198,7 +198,7 @@ static inline bool gen_op(struct gen_state *state, gadget_t *gadgets, enum arg a
             *imm = 1;
             break;
     }
-    if (arg >= arg_count || gadgets[arg] == NULL) {
+    if (unlikely(arg >= arg_count || gadgets[arg] == NULL)) {
         UNDEFINED;
     }
     if (arg == arg_mem || arg == arg_addr) {
@@ -214,7 +214,7 @@ static inline bool gen_op(struct gen_state *state, gadget_t *gadgets, enum arg a
 }
 #define op(type, thing, z) do { \
     extern gadget_t type##_gadgets[]; \
-    if (!gen_op(state, type##_gadgets, arg_##thing, &modrm, &imm, z, seg_gs, addr_offset)) return false; \
+    if (unlikely(!gen_op(state, type##_gadgets, arg_##thing, &modrm, &imm, z, seg_gs, addr_offset))) return false; \
 } while (0)
 
 #define load(thing, z) op(load, thing, z)
@@ -523,7 +523,7 @@ static inline bool gen_vec(enum arg src, enum arg dst, void (*helper)(), gadget_
 #define _v(src, dst, helper, _imm, z) do { \
     extern void gadget_vec_helper_read##z##_imm(void); \
     extern void gadget_vec_helper_write##z##_imm(void); \
-    if (!gen_vec(src, dst, (void (*)()) helper, gadget_vec_helper_read##z##_imm, gadget_vec_helper_write##z##_imm, state, &modrm, imm, seg_gs, has_imm_##_imm)) return false; \
+    if (unlikely(!gen_vec(src, dst, (void (*)()) helper, gadget_vec_helper_read##z##_imm, gadget_vec_helper_write##z##_imm, state, &modrm, imm, seg_gs, has_imm_##_imm))) return false; \
 } while (0)
 #define v_(op, src, dst, _imm,z) _v(arg_##src, arg_##dst, vec_##op##z, _imm,z)
 #define v(op, src, dst,z) v_(op, src, dst,,z)

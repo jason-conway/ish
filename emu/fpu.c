@@ -66,7 +66,7 @@ void fpu_st(struct cpu_state *cpu, int i) {
 }
 void fpu_ist16(struct cpu_state *cpu, int16_t *i) {
     int64_t res = f80_to_int(ST(0));
-    if (res < INT16_MIN || res > INT16_MAX)
+    if (unlikely(res < INT16_MIN || res > INT16_MAX))
         res = INT16_MIN;
     *i = (int16_t) res;
 }
@@ -154,7 +154,7 @@ static void fpu_compare(struct cpu_state *cpu, float80 x) {
     cpu->c2 = cpu->c1 = 0;
     cpu->c0 = f80_lt(ST(0), x);
     cpu->c3 = f80_eq(ST(0), x);
-    if (f80_uncomparable(ST(0), x))
+    if (unlikely(f80_uncomparable(ST(0), x)))
         cpu->c0 = cpu->c2 = cpu->c3 = 1;
 }
 void fpu_com(struct cpu_state *cpu, int i) {

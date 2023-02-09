@@ -129,7 +129,7 @@ static float80 f80_normalize(float80 f) {
         shift = __builtin_clzl(f.signif);
     else
         shift = 64; // __builtin_clzl has undefined result with zero
-    if (f.exp - shift < EXP_MIN) {
+    if (unlikely(f.exp - shift < EXP_MIN)) {
         // if we shifted this much, exponent would go below its minimum
         // so shift as much as possible and create a denormal
         f = f80_shift_left(f, f.exp - EXP_MIN);
@@ -160,7 +160,7 @@ static float80 u128_normalize_round(uint128_t signif, int exp, int sign) {
         else
             signif = u128_shift_right_round(signif, unbias(EXP_MIN) - exp, sign);
         exp = unbias(EXP_DENORMAL);
-    } else if (exp - shift > unbias(EXP_MAX)) {
+    } else if (unlikely(exp - shift > unbias(EXP_MAX))) {
         //printf("0x%.16llx%.16llx ", (unsigned long long) (signif >> 64), (unsigned long long) signif);
         // too big to represent, so either construct infinity, or round it to the largest representable number
         float80 f;
@@ -209,11 +209,11 @@ float80 f80_from_int(int64_t i) {
 }
 
 int64_t f80_to_int(float80 f) {
-    if (!f80_is_supported(f))
+    if (unlikely(!f80_is_supported(f)))
         return INT64_MIN; // indefinite
     // if you need an exponent greater than 2^63 to represent this number, it
     // can't be represented as a 64-bit integer
-    if (f.exp > bias(63))
+    if (unlikely(f.exp > bias(63)))
         return INT64_MIN; // also indefinite
     // shift right (reduce precision) until the exponent is 2^63
     f = f80_shift_right(f, bias(63) - f.exp);
@@ -237,7 +237,7 @@ float80 f80_from_double(double d) {
     memcpy(&db, &d, sizeof(db));
     float80 f;
 
-    if (db.exp == EXP64_SPECIAL)
+    if (unlikely(db.exp == EXP64_SPECIAL))
         f.exp = EXP_SPECIAL;
     else if (db.exp == EXP64_DENORMAL)
         // denormals actually have an exponent of EXP_MIN, the special exponent
@@ -256,14 +256,14 @@ float80 f80_from_double(double d) {
 }
 
 double f80_to_double(float80 f) {
-    if (!f80_is_supported(f))
+    if (unlikely(!f80_is_supported(f)))
         return NAN;
     struct double_bits db;
     db.sign = f.sign;
     int new_exp = unbias(f.exp) + 0x3ff;
-    if (f.exp == EXP_SPECIAL)
+    if (unlikely(f.exp == EXP_SPECIAL))
         new_exp = EXP64_SPECIAL;
-    else if (new_exp > EXP64_MAX)
+    else if (unlikely(new_exp > EXP64_MAX))
         // out of range
         return !f.sign ? INFINITY : -INFINITY;
     if (new_exp <= 0) {
@@ -278,7 +278,7 @@ double f80_to_double(float80 f) {
     uint64_t db_signif = u128_shift_right_round(f.signif, 11, f.sign);
     // handle the case when f.signif becomes 0x1fffffffffffff after shifting
     // and then is rounded up
-    if (db_signif & (1ul << 53)) {
+    if (unlikely(db_signif & (1ul << 53))) {
         db_signif >>= 1;
         db.exp++;
     }
@@ -289,7 +289,7 @@ double f80_to_double(float80 f) {
 }
 
 float80 f80_round(float80 f) {
-    if (!f80_is_supported(f))
+    if (unlikely(!f80_is_supported(f)))
         return F80_NAN;
     // Shift out all the bits to the right of the point (early exit if there are none)
     int bits_to_clear = 63 - unbias(f.exp);
@@ -373,19 +373,19 @@ float80 f80_add(float80 a, float80 b) {
         // but first, special case time!
 
         // infinity - infinity is indefinite, not zero
-        if (f80_isinf(a) && f80_isinf(b))
+        if (unlikely(f80_isinf(a) && f80_isinf(b)))
             return F80_NAN;
 
         // When subtracting a (relatively) very small number in chop mode, all
         // the bits will get shifted out and nothing will happen, but this
         // should give a smaller result.
-        if (f80_rounding_mode == round_chop && b_signif == 0 && b.signif != 0)
+        if (unlikely(f80_rounding_mode == round_chop && b_signif == 0 && b.signif != 0))
             b_signif = 1;
 
         // Depending on the rounding mode, it's possible that shifting out all
         // the bits produced 1 instead of 0. Subtracting 1 from infinity would
         // give 2^16384-1 which is wrong.
-        if (f80_isinf(a))
+        if (unlikely(f80_isinf(a)))
             b_signif = 0;
 
         if (a_signif >= b_signif) {
@@ -398,7 +398,7 @@ float80 f80_add(float80 a, float80 b) {
         }
 
         // a bizarre special case https://twitter.com/tblodt/status/1262145524620234752
-        if (signif == 0 && a_signif != 0 && f80_rounding_mode == round_down)
+        if (unlikely(signif == 0 && a_signif != 0 && f80_rounding_mode == round_down))
             return (float80) {.sign = 1};
 
         // a - a = 0
@@ -419,7 +419,7 @@ float80 f80_sub(float80 a, float80 b) {
 float80 f80_mul(float80 a, float80 b) {
     handle_nans(a, b);
 
-    if (f80_isinf(a) || f80_isinf(b)) {
+    if (unlikely(f80_isinf(a) || f80_isinf(b))) {
         // infinity times zero is undefined
         if (f80_iszero(a) || f80_iszero(b))
             return F80_NAN;
@@ -444,16 +444,16 @@ float80 f80_div(float80 a, float80 b) {
     handle_nans(a, b);
 
     float80 f;
-    if (f80_isinf(a)) {
+    if (unlikely(f80_isinf(a))) {
         // dividing into infinity gives infinity
         f = F80_INF;
         // except infinity / infinity is nan
         if (f80_isinf(b))
             return F80_NAN;
-    } else if (f80_isinf(b)) {
+    } else if (unlikely(f80_isinf(b))) {
         // dividing by infinity gives zero
         f = (float80) {0};
-    } else if (f80_iszero(b)) {
+    } else if (unlikely(f80_iszero(b))) {
         // division by zero gives infinity
         f = F80_INF;
         // except 0 / 0 is nan
@@ -489,18 +489,18 @@ float80 f80_mod(float80 x, float80 y) {
 }
 
 bool f80_uncomparable(float80 a, float80 b) {
-    if (!f80_is_supported(a) || !f80_is_supported(b))
+    if (unlikely(!f80_is_supported(a) || !f80_is_supported(b)))
         return true;
-    if (f80_isnan(a) || f80_isnan(b))
+    if (unlikely(f80_isnan(a) || f80_isnan(b)))
         return true;
     return false;
 }
 
 bool f80_lt(float80 a, float80 b) {
-    if (f80_uncomparable(a, b))
+    if (unlikely(f80_uncomparable(a, b)))
         return false;
     // same signed infinities are equal, not less (though subtraction would produce nan)
-    if (f80_isinf(a) && f80_isinf(b) && a.sign == b.sign)
+    if (unlikely(f80_isinf(a) && f80_isinf(b) && a.sign == b.sign))
         return false;
     // zeroes are always equal
     if (f80_iszero(a) && f80_iszero(b))
@@ -510,7 +510,7 @@ bool f80_lt(float80 a, float80 b) {
     return diff.sign == 1 && !f80_iszero(diff);
 }
 bool f80_eq(float80 a, float80 b) {
-    if (f80_uncomparable(a, b))
+    if (unlikely(f80_uncomparable(a, b)))
         return false;
     if (f80_iszero(a)) a.sign = 0;
     if (f80_iszero(a)) b.sign = 0;
