@@ -174,7 +174,7 @@ int pt_unmap_always(struct mem *mem, page_t start, pages_t pages) {
 }
 
 int pt_map_nothing(struct mem *mem, page_t start, pages_t pages, unsigned flags) {
-    if (pages == 0) return 0;
+    if (unlikely(pages == 0)) return 0;
     void *memory = mmap(NULL, pages * PAGE_SIZE,
             PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
     return pt_map(mem, start, pages, memory, 0, flags | P_ANONYMOUS);

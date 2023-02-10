@@ -72,7 +72,7 @@ void fpu_ist16(struct cpu_state *cpu, int16_t *i) {
 }
 void fpu_ist32(struct cpu_state *cpu, int32_t *i) {
     int64_t res = f80_to_int(ST(0));
-    if (res < INT32_MIN || res > INT32_MAX)
+    if (unlikely(res < INT32_MIN || res > INT32_MAX))
         res = INT32_MIN;
     *i = (int32_t) res;
 }

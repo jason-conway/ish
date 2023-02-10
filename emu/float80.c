@@ -50,7 +50,7 @@ static uint128_t u128_shift_right_round(uint128_t i, int shift, int sign) {
     if (shift > 127) {
         // If we should be rounding away from zero, and there are any nonzero
         // bits involved, an infinite amount of right shift should give 1
-        if (round_away_from_zero(sign) && i != 0)
+        if (unlikely(round_away_from_zero(sign) && i != 0))
             return 1;
         return 0;
     }
@@ -66,7 +66,7 @@ static uint128_t u128_shift_right_round(uint128_t i, int shift, int sign) {
     if (guard == 0 && rest == 0)
         return i;
 
-    if (round_away_from_zero(sign)) {
+    if (unlikely(round_away_from_zero(sign))) {
         i++;
     } else if (f80_rounding_mode == round_to_nearest && guard) {
         if (rest != 0)
@@ -558,9 +558,9 @@ float80 f80_log2(float80 x) {
 }
 
 float80 f80_sqrt(float80 x) {
-    if (f80_iszero(x))
+    if (unlikely(f80_iszero(x)))
         return x;
-    if (f80_isnan(x) || x.sign)
+    if (unlikely(f80_isnan(x) || x.sign))
         return F80_NAN;
     // for a rough guess, just cut the exponent by 2
     float80 guess = x;
