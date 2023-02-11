@@ -67,7 +67,7 @@ void vec_merge128(NO_CPU, const void *src, void *dst) {
 }
 
 void vec_imm_shiftl_w128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
-    if (amount > 15) {
+    if (unlikely(amount > 15)) {
         zero_xmm(dst);
     } else {
         for (int i = 0; i < 8; i++) {
@@ -76,7 +76,7 @@ void vec_imm_shiftl_w128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
     }
 }
 void vec_imm_shiftl_q128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
-    if (amount > 63) {
+    if (unlikely(amount > 63)) {
         zero_xmm(dst);
     } else {
         dst->qw[0] <<= amount;
@@ -84,7 +84,7 @@ void vec_imm_shiftl_q128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
     }
 }
 void vec_imm_shiftl_d128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
-    if (amount > 31) {
+    if (unlikely(amount > 31)) {
         zero_xmm(dst);
     } else {
         dst->u32[0] <<= amount;
@@ -95,7 +95,7 @@ void vec_imm_shiftl_d128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
 }
 
 void vec_imm_shiftr_q128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
-    if (amount > 63) {
+    if (unlikely(amount > 63)) {
         zero_xmm(dst);
     } else {
         dst->qw[0] >>= amount;
@@ -103,7 +103,7 @@ void vec_imm_shiftr_q128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
     }
 }
 void vec_imm_shiftr_d128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
-    if (amount > 31) {
+    if (unlikely(amount > 31)) {
         zero_xmm(dst);
     } else {
         dst->u32[0] >>= amount;
@@ -113,7 +113,7 @@ void vec_imm_shiftr_d128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
     }
 }
 void vec_imm_shiftr_w128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
-    if (amount > 15) {
+    if (unlikely(amount > 15)) {
         zero_xmm(dst);
     } else {
         for (unsigned i = 0; i < 8; i++) {
@@ -123,14 +123,14 @@ void vec_imm_shiftr_w128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
 }
 
 void vec_imm_shiftl_dq128(NO_CPU, uint8_t amount, union xmm_reg *dst) {
-    if (amount >= 16)
+    if (unlikely(amount >= 16))
         zero_xmm(dst);
     else
         dst->u128 <<= amount * 8;
 }
 
 void vec_imm_shiftr_dq128(NO_CPU, uint8_t amount, union xmm_reg *dst) {
-    if (amount >= 16)
+    if (unlikely(amount >= 16))
         zero_xmm(dst);
     else
         dst->u128 >>= amount * 8;
@@ -139,7 +139,7 @@ void vec_imm_shiftr_dq128(NO_CPU, uint8_t amount, union xmm_reg *dst) {
 void vec_shiftl_q128(NO_CPU, union xmm_reg *amount, union xmm_reg *dst) {
     uint64_t amount_qw = amount->qw[0];
 
-    if (amount_qw > 63) {
+    if (unlikely(amount_qw > 63)) {
         zero_xmm(dst);
     } else {
         dst->qw[0] <<= amount_qw;
@@ -150,7 +150,7 @@ void vec_shiftl_q128(NO_CPU, union xmm_reg *amount, union xmm_reg *dst) {
 void vec_shiftr_q128(NO_CPU, union xmm_reg *amount, union xmm_reg *dst) {
     uint64_t amount_qw = amount->qw[0];
 
-    if (amount_qw > 63) {
+    if (unlikely(amount_qw > 63)) {
         zero_xmm(dst);
     } else {
         dst->qw[0] >>= amount_qw;
@@ -160,7 +160,7 @@ void vec_shiftr_q128(NO_CPU, union xmm_reg *amount, union xmm_reg *dst) {
 
 void vec_imm_shiftrs_w128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
     for (unsigned i = 0; i < 8; i++) {
-        if (amount > 15)
+        if (unlikely(amount > 15))
             dst->u16[i] = ((dst->u16[i] >> 15) & (uint16_t)1) ? 0xffff : 0;
         else
             dst->u16[i] = ((int16_t)(dst->u16[i])) >> amount;
@@ -168,7 +168,7 @@ void vec_imm_shiftrs_w128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
 }
 void vec_imm_shiftrs_d128(NO_CPU, const uint8_t amount, union xmm_reg *dst) {
     for (unsigned i = 0; i < 4; i++) {
-        if (amount > 31)
+        if (unlikely(amount > 31))
             dst->u32[i] = ((dst->u32[i] >> 31) & (uint32_t)1) ? 0xffffffff : 0;
         else
             dst->u32[i] = ((int32_t)(dst->u32[i])) >> amount;
