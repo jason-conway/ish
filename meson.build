@@ -28,45 +28,23 @@ endif
 
 fflags = []
 
-if get_option('fsan')
-    add_project_arguments('-fsanitize=memory', language: 'c')
-    add_project_arguments('-fno-optimize-sibling-calls', language: 'c')
-    add_project_arguments('-fno-omit-frame-pointer', language: 'c')
-    fflags = ['-fsanitize=memory']
-endif
-
-if get_option('asan')
-    add_project_arguments('-fsanitize=address', language: 'c')
-    add_project_arguments('-fno-optimize-sibling-calls', language: 'c')
-    add_project_arguments('-fno-omit-frame-pointer', language: 'c')
-    fflags = ['-fsanitize=address']
-endif
-
-if get_option('safe_stack')
-    add_project_arguments('-fsanitize=safe-stack', language: 'c')
-    fflags = ['-fsanitize=safe-stack']
-endif
-
-if get_option('profile_instr')
-    add_project_arguments('-fprofile-instr-generate', language: 'c')
-    fflags = ['-fprofile-instr-generate']
-endif
-
 if get_option('use_profile_instr')
-    add_project_arguments('-fprofile-instr-use=./../code.profdata', language: 'c')
+    add_project_arguments('-fprofile-instr-use=./../ish.profdata', language: 'c')
     add_project_arguments('-fdiagnostics-show-hotness', language: 'c')
     add_project_arguments('-fsave-optimization-record', language: 'c')
-    fflags = ['-fprofile-instr-use=./../code.profdata', '-fdiagnostics-show-hotness', '-fsave-optimization-record']
+    fflags = ['-fprofile-instr-use=./../ish.profdata', '-fdiagnostics-show-hotness', '-fsave-optimization-record']
 endif
 
 if get_option('coverage')
-    add_project_arguments('--coverage', language: 'c')
-    fflags = ['--coverage']
+    add_project_arguments('-fprofile-instr-generate', language: 'c')
+    add_project_arguments('-fcoverage-mapping', language: 'c')
+    fflags = ['-fprofile-instr-generate', '-fcoverage-mapping']
 endif
 
 add_project_arguments('-Wno-switch', language: 'c')
 # add_project_arguments('-g3', language: 'c')
 # add_project_arguments('-fverbose-asm', language: 'c')
+add_project_arguments('-O3', language: 'c')
 # add_project_arguments('-fdebug-macro', language: 'c')
 # add_project_arguments('-save-temps', language: 'c')
 
@@ -228,7 +206,8 @@ elif get_option('kernel') == 'linux'
             libdl,
             threads,
             declare_dependency(link_whole: modules),
-        ])
+        ],
+        c_args: fflags, link_args: fflags)
 endif
 
 subdir('tools')

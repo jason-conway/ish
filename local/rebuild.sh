@@ -17,7 +17,7 @@ cd "$(dirname "$0")"
 
 main() {
     cd ..
-    CC=clang LD=lld meson setup --wipe --debug -Dengine=jit -Dkernel=linux build
+    CC=clang LD=lld meson setup --wipe --debug -Dengine=jit -Dkernel=ish build
     ninja -C build
 }
 
