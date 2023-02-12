@@ -66,7 +66,7 @@ static inline bool modrm_decode32(addr_t *ip, struct tlb *tlb, struct modrm *mod
         READ(sib_byte);
         modrm->base = RM(sib_byte);
         // wtf intel
-        if (modrm->rm_opcode == rm_disp32) {
+        if (unlikely(modrm->rm_opcode == rm_disp32)) {
             if (mode == mode_disp0) {
                 modrm->base = reg_none;
                 mode = mode_disp32;
@@ -76,11 +76,11 @@ static inline bool modrm_decode32(addr_t *ip, struct tlb *tlb, struct modrm *mod
         }
         modrm->index = REG(sib_byte);
         modrm->shift = MOD(sib_byte);
-        if (modrm->index != rm_none)
+        if (unlikely(modrm->index != rm_none))
             modrm->type = modrm_mem_si;
     }
 
-    if (mode == mode_disp0) {
+    if (unlikely(mode == mode_disp0)) {
         modrm->offset = 0;
     } else if (mode == mode_disp8) {
         int8_t offset;

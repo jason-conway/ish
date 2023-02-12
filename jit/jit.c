@@ -97,13 +97,13 @@ static void jit_insert(struct jit *jit, struct jit_block *block) {
 
     list_init_add(&jit->hash[block->addr % jit->hash_size], &block->chain);
     list_init_add(blocks_list(jit, PAGE(block->addr), 0), &block->page[0]);
-    if (PAGE(block->addr) != PAGE(block->end_addr))
+    if (unlikely(PAGE(block->addr) != PAGE(block->end_addr)))
         list_init_add(blocks_list(jit, PAGE(block->end_addr), 1), &block->page[1]);
 }
 
 static struct jit_block *jit_lookup(struct jit *jit, addr_t addr) {
     struct list *bucket = &jit->hash[addr % jit->hash_size];
-    if (list_null(bucket))
+    if (unlikely(list_null(bucket)))
         return NULL;
     struct jit_block *block;
     list_for_each_entry(bucket, block, chain) {
@@ -261,15 +261,19 @@ static int cpu_single_step(struct cpu_state *cpu, struct tlb *tlb) {
 }
 
 int cpu_run_to_interrupt(struct cpu_state *cpu, struct tlb *tlb) {
-    if (cpu->poked_ptr == NULL)
+    if (unlikely(cpu->poked_ptr == NULL))
         cpu->poked_ptr = &cpu->_poked;
     tlb_refresh(tlb, cpu->mmu);
-    int interrupt = (cpu->tf ? cpu_single_step : cpu_step_to_interrupt)(cpu, tlb);
+    int interrupt;
+    if (unlikely(cpu->tf))
+        interrupt = cpu_single_step(cpu, tlb);
+    else
+        interrupt = cpu_step_to_interrupt(cpu, tlb);
     cpu->trapno = interrupt;
 
     struct jit *jit = cpu->mmu->jit;
     lock(&jit->lock);
-    if (!list_empty(&jit->jetsam)) {
+    if (unlikely(!list_empty(&jit->jetsam))) {
         // write-lock the jetsam_lock to wait until other jit threads get to
         // this point, so they will all clear out their block pointers
         // TODO: use RCU for better performance

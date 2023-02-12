@@ -52,7 +52,7 @@ __no_instrument void *tlb_handle_miss(struct tlb *tlb, addr_t addr, int type) {
     char *ptr = mmu_translate(tlb->mmu, TLB_PAGE(addr), type);
     if (unlikely(tlb->mmu->changes != tlb->mem_changes))
         tlb_flush(tlb);
-    if (ptr == NULL) {
+    if (unlikely(ptr == NULL)) {
         tlb->segfault_addr = addr;
         return NULL;
     }

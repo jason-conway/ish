@@ -51,7 +51,7 @@ void mem_destroy(struct mem *mem) {
 
 static struct pt_entry *mem_pt_new(struct mem *mem, page_t page) {
     struct pt_entry *pgdir = mem->pgdir[PGDIR_TOP(page)];
-    if (pgdir == NULL) {
+    if (unlikely(pgdir == NULL)) {
         pgdir = mem->pgdir[PGDIR_TOP(page)] = calloc(MEM_PGDIR_SIZE, sizeof(struct pt_entry));
         mem->pgdir_used++;
     }
@@ -60,10 +60,10 @@ static struct pt_entry *mem_pt_new(struct mem *mem, page_t page) {
 
 struct pt_entry *mem_pt(struct mem *mem, page_t page) {
     struct pt_entry *pgdir = mem->pgdir[PGDIR_TOP(page)];
-    if (pgdir == NULL)
+    if (unlikely(pgdir == NULL))
         return NULL;
     struct pt_entry *entry = &pgdir[PGDIR_BOTTOM(page)];
-    if (entry->data == NULL)
+    if (unlikely(entry->data == NULL))
         return NULL;
     return entry;
 }
@@ -93,7 +93,7 @@ page_t pt_find_hole(struct mem *mem, pages_t size) {
         }
         if (mem_pt(mem, page) != NULL)
             in_hole = false;
-        else if (hole_end - page == size)
+        else if (unlikely(hole_end - page == size))
             return page;
     }
     return BAD_PAGE;

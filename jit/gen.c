@@ -18,7 +18,7 @@ int gen_step(struct gen_state *state, struct tlb *tlb) {
 
 static void gen(struct gen_state *state, unsigned long thing) {
     assert(state->size <= state->capacity);
-    if (state->size >= state->capacity) {
+    if (unlikely(state->size >= state->capacity)) {
         state->capacity *= 2;
         struct jit_block *bigger_block = realloc(state->block,
                 sizeof(struct jit_block) + state->capacity * sizeof(unsigned long));
@@ -158,13 +158,13 @@ static inline int sz(int size) {
 }
 
 bool gen_addr(struct gen_state *state, struct modrm *modrm, bool seg_gs) {
-    if (modrm->base == reg_none)
+    if (unlikely(modrm->base == reg_none))
         gg(addr_none, modrm->offset);
     else
         gag(addr, modrm->base, modrm->offset);
-    if (modrm->type == modrm_mem_si)
+    if (unlikely(modrm->type == modrm_mem_si))
         ga(si, modrm->index * 4 + modrm->shift);
-    if (seg_gs)
+    if (unlikely(seg_gs))
         g(seg_gs);
     return true;
 }
