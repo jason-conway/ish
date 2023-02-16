@@ -399,16 +399,12 @@ restart:
                            READMODRM; V_OP(shiftr_d, xmm_modrm_val, xmm_modrm_reg, 128); break;
                 case 0xd3: TRACEI("psrlq xmm:modrm, xmm");
                            READMODRM; V_OP(shiftr_q, xmm_modrm_val, xmm_modrm_reg, 128); break;
-
                 case 0xd4: TRACEI("paddq xmm:modrm, xmm");
                            READMODRM; V_OP(add_q, xmm_modrm_val, xmm_modrm_reg, 128); break;
-
                 case 0xd5: TRACEI("pmullw xmm:modrm, xmm");
                            READMODRM; V_OP(mull, xmm_modrm_val, xmm_modrm_reg, 128); break;
-
                 case 0xd6: TRACEI("movq xmm, xmm:modrm");
                            READMODRM; VMOV(xmm_modrm_reg, xmm_modrm_val,64); break;
-
                 case 0xd7: TRACEI("pmovmskb xmm:modrm, reg");
                            READMODRM_NOMEM; V_OP(movmask_b, xmm_modrm_val, modrm_reg,128); break;
                 case 0xd8: TRACEI("psubusb xmm:modrm, xmm");
