@@ -23,7 +23,7 @@
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *sendFeedback;
 @property (weak, nonatomic) IBOutlet UITableViewCell *openGithub;
-@property (weak, nonatomic) IBOutlet UITableViewCell *openTwitter;
+@property (weak, nonatomic) IBOutlet UITableViewCell *openMastodon;
 @property (weak, nonatomic) IBOutlet UITableViewCell *openDiscord;
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *upgradeApkCell;
@@ -33,6 +33,8 @@
 @property (weak, nonatomic) IBOutlet UITableViewCell *resetMountsCell;
 
 @property (weak, nonatomic) IBOutlet UILabel *versionLabel;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *saddamHussein;
 
 @end
 
@@ -68,6 +70,11 @@
     [self _updateUI];
 }
 
+- (void)updateViewConstraints {
+    self.saddamHussein.constant = UIEdgeInsetsInsetRect(self.tableView.frame, self.tableView.adjustedContentInset).size.height;
+    [super updateViewConstraints];
+}
+
 - (IBAction)dismiss:(id)sender {
     [self dismissViewControllerAnimated:self completion:nil];
 }
@@ -99,8 +106,8 @@
         [UIApplication openURL:@"mailto:tblodt@icloud.com?subject=Feedback%20for%20iSH"];
     } else if (cell == self.openGithub) {
         [UIApplication openURL:@"https://github.com/ish-app/ish"];
-    } else if (cell == self.openTwitter) {
-        [UIApplication openURL:@"https://twitter.com/tblodt"];
+    } else if (cell == self.openMastodon) {
+        [UIApplication openURL:@"https://publ.ish.app/ish"];
     } else if (cell == self.openDiscord) {
         [UIApplication openURL:@"https://discord.gg/HFAXj44"];
     } else if (cell == self.exportContainerCell) {
