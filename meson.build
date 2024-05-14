@@ -86,10 +86,6 @@ if get_option('engine') == 'jit'
         gadgets+'/misc.S',
         offsets,
     ]
-else
-    emu_src += [
-        'emu/interp.c',
-    ]
 endif
 
 libish_emu = library('ish_emu', emu_src,

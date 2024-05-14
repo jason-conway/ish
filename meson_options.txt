@@ -2,8 +2,8 @@ option('log', type: 'string', value: '')
 option('nolog', type: 'string', value: '')
 option('log_handler', type: 'string', value: 'dprintf')
 
-option('engine', type: 'combo', choices: ['jit', 'interp'], value: 'jit')
-option('kernel', type: 'combo', choices: ['ish', 'linux'], value: 'linux')
+option('engine', type: 'combo', choices: ['jit'], value: 'jit')
+option('kernel', type: 'combo', choices: ['ish', 'linux'], value: 'ish')
 option('kconfig', type: 'array', value: [])
 
 option('vdso_c_args', type: 'string', value: '')
